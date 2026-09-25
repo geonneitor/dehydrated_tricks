@@ -1,0 +1,23 @@
+node_modules/
+*.log
+.DS_Store
+*.Zone.Identifier
+index.backup.html
+
+# Original unorganized assets (kept locally, organized copies in /assets)
+1.png
+2.png
+3.png
+4.png
+5.png
+Cabeza con croqueta.png
+Croqueta pescado.png
+Logo opcio*.png
+Logo solo texto*.png
+Mascota pose*.png
+Tipografi*.png
+codigo_qr.png
+croqueta-*.png
+logo-*.png
+mascota-*.png
+portada-*.png

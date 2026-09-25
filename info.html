@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información Nutricional · Guaw & Miaw Pet Shop</title>
+    <meta name="description" content="Información nutricional completa de nuestros premios deshidratados. Tabla de análisis garantizado, ingredientes y porciones recomendadas para tu mascota.">
+    <meta name="theme-color" content="#D4294B">
+    <link rel="icon" type="image/png" href="assets/logos/logo-main.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ═══════════════════ NAVBAR (simplified) ═══════════════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar__logo" aria-label="Guaw & Miaw - Inicio">
+                <img src="assets/logos/logo-main.png" alt="Guaw & Miaw Pet Shop" width="52" height="52">
+            </a>
+            <div class="navbar__links" id="navLinks">
+                <a href="index.html">Inicio</a>
+                <a href="index.html#productos">Productos</a>
+                <a href="https://wa.me/525528462102?text=¡Hola!%20Acabo%20de%20escanear%20el%20QR%20y%20quiero%20hacer%20un%20pedido%20🐾"
+                   class="btn btn--whatsapp"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   id="info-whatsapp-btn">
+                    <svg class="btn__icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Pedir
+                </a>
+            </div>
+            <button class="navbar__toggle" id="navToggle" aria-label="Menú de navegación">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════ INFO PAGE ═══════════════════ -->
+    <div class="info-page">
+
+        <!-- Header -->
+        <header class="info-header">
+            <div class="container">
+                <img src="assets/mascot/mascot-head-kibble.png"
+                     alt="Mascota Guaw & Miaw"
+                     width="120" height="auto"
+                     style="margin: 0 auto var(--space-sm); filter: drop-shadow(0 8px 16px rgba(92,58,30,0.15));">
+                <h1 class="info-header__title">Información Nutricional</h1>
+                <p class="info-header__subtitle">Premios Deshidratados Monoproteicos · Guaw & Miaw Pet Shop</p>
+            </div>
+        </header>
+
+        <!-- Product Tabs -->
+        <div class="info-tabs" id="infoTabs">
+            <button class="info-tab active" data-target="charales" id="tab-charales">🐟 Charales</button>
+            <button class="info-tab" data-target="higados" id="tab-higados">🥩 Hígado de Res</button>
+            <button class="info-tab" data-target="orejas" id="tab-orejas">🐷 Orejas de Cerdo</button>
+            <button class="info-tab" data-target="mollejas" id="tab-mollejas">🍗 Mollejas</button>
+            <button class="info-tab" data-target="patitas" id="tab-patitas">🐔 Patitas</button>
+        </div>
+
+        <!-- ═══ CHARALES ═══ -->
+        <div class="info-panel active" id="panel-charales">
+            <div class="info-product">
+                <h2 class="info-product__name">Charales Deshidratados</h2>
+                <p class="info-product__ingredient">Ingredientes: 100% Charal entero deshidratado (Chirostoma spp.). Sin sal, aditivos ni conservadores.</p>
+
+                <div class="nutrition-table">
+                    <div class="nutrition-table__header">📊 Análisis Garantizado</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parámetro</th>
+                                <th>Porcentaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Proteína Cruda (mín.)</td><td>62.0%</td></tr>
+                            <tr><td>Grasa Cruda (mín.)</td><td>5.5%</td></tr>
+                            <tr><td>Fibra Cruda (máx.)</td><td>1.2%</td></tr>
+                            <tr><td>Humedad (máx.)</td><td>9.0%</td></tr>
+                            <tr><td>Cenizas (máx.)</td><td>15.0%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="portions-card">
+                    <div class="portions-card__header">🍽️ Porciones Diarias Recomendadas</div>
+                    <div class="portions-card__body">
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐱</span>
+                            <span class="portion-row__size">Gatos y perros &lt; 5 kg</span>
+                            <span class="portion-row__amount">1 a 2 piezas al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕</span>
+                            <span class="portion-row__size">Perros chicos (5 a 10 kg)</span>
+                            <span class="portion-row__amount">3 a 5 piezas al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🦮</span>
+                            <span class="portion-row__size">Perros medianos (10 a 25 kg)</span>
+                            <span class="portion-row__amount">6 a 8 piezas al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕‍🦺</span>
+                            <span class="portion-row__size">Perros grandes (&gt; 25 kg)</span>
+                            <span class="portion-row__amount">8 a 12 piezas al día</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-conservation">
+                    <div class="info-conservation__icon">📦</div>
+                    <p><strong>Conservación:</strong> Consérvese en un lugar fresco y seco, lejos del sol. Este producto es un premio complementario; no sustituye una dieta completa. Consulte a su Médico Veterinario Zootecnista.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ HÍGADO DE RES ═══ -->
+        <div class="info-panel" id="panel-higados">
+            <div class="info-product">
+                <h2 class="info-product__name">Hígado de Res Deshidratado</h2>
+                <p class="info-product__ingredient">Ingredientes: 100% Hígado de res deshidratado (Bos taurus). Sin químicos ni sales añadidas.</p>
+
+                <div class="nutrition-table">
+                    <div class="nutrition-table__header">📊 Análisis Garantizado</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parámetro</th>
+                                <th>Porcentaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Proteína Cruda (mín.)</td><td>64.0%</td></tr>
+                            <tr><td>Grasa Cruda (mín.)</td><td>10.5%</td></tr>
+                            <tr><td>Fibra Cruda (máx.)</td><td>1.0%</td></tr>
+                            <tr><td>Humedad (máx.)</td><td>8.5%</td></tr>
+                            <tr><td>Cenizas (máx.)</td><td>5.5%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="portions-card">
+                    <div class="portions-card__header">🍽️ Porciones Diarias Recomendadas</div>
+                    <div class="portions-card__body">
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐱</span>
+                            <span class="portion-row__size">Gatos y perros &lt; 5 kg</span>
+                            <span class="portion-row__amount">1 bocado chico al día (máx. 3 veces/semana)</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕</span>
+                            <span class="portion-row__size">Perros chicos (5 a 10 kg)</span>
+                            <span class="portion-row__amount">1 a 2 bocados al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🦮</span>
+                            <span class="portion-row__size">Perros medianos (10 a 25 kg)</span>
+                            <span class="portion-row__amount">2 a 3 bocados al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕‍🦺</span>
+                            <span class="portion-row__size">Perros grandes (&gt; 25 kg)</span>
+                            <span class="portion-row__amount">4 a 5 bocados al día</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-conservation">
+                    <div class="info-conservation__icon">📦</div>
+                    <p><strong>Conservación:</strong> Consérvese en un lugar fresco y seco, lejos del sol. Este producto es un premio complementario; no sustituye una dieta completa. Consulte a su Médico Veterinario Zootecnista.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ OREJAS DE CERDO ═══ -->
+        <div class="info-panel" id="panel-orejas">
+            <div class="info-product">
+                <h2 class="info-product__name">Orejas de Cerdo Deshidratadas</h2>
+                <p class="info-product__ingredient">Ingredientes: 100% Oreja de cerdo deshidratada (Sus scrofa domesticus). Desengrasada naturalmente, sin blanqueadores químicos.</p>
+
+                <div class="nutrition-table">
+                    <div class="nutrition-table__header">📊 Análisis Garantizado</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parámetro</th>
+                                <th>Porcentaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Proteína Cruda (mín.)</td><td>60.0%</td></tr>
+                            <tr><td>Grasa Cruda (mín.)</td><td>22.0%</td></tr>
+                            <tr><td>Fibra Cruda (máx.)</td><td>2.0%</td></tr>
+                            <tr><td>Humedad (máx.)</td><td>8.0%</td></tr>
+                            <tr><td>Cenizas (máx.)</td><td>3.5%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="portions-card">
+                    <div class="portions-card__header">🍽️ Porciones Recomendadas (Exclusivo para perros)</div>
+                    <div class="portions-card__body">
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕</span>
+                            <span class="portion-row__size">Perros &lt; 5 kg</span>
+                            <span class="portion-row__amount">1/4 de oreja (en tiras), 1 vez por semana</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕</span>
+                            <span class="portion-row__size">Perros chicos (5 a 10 kg)</span>
+                            <span class="portion-row__amount">1/2 oreja, 1 a 2 veces por semana</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🦮</span>
+                            <span class="portion-row__size">Perros medianos (10 a 25 kg)</span>
+                            <span class="portion-row__amount">1 pieza entera, 2 veces por semana</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕‍🦺</span>
+                            <span class="portion-row__size">Perros grandes (&gt; 25 kg)</span>
+                            <span class="portion-row__amount">1 pieza entera, hasta 3 veces por semana</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-conservation">
+                    <div class="info-conservation__icon">⚠️</div>
+                    <p><strong>Nota:</strong> Este producto es exclusivo para perros. <strong>No apto para gatos.</strong></p>
+                    <br>
+                    <p><strong>Conservación:</strong> Consérvese en un lugar fresco y seco, lejos del sol. Este producto es un premio complementario; no sustituye una dieta completa. Consulte a su Médico Veterinario Zootecnista.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ MOLLEJAS DE POLLO ═══ -->
+        <div class="info-panel" id="panel-mollejas">
+            <div class="info-product">
+                <h2 class="info-product__name">Mollejas de Pollo Deshidratadas</h2>
+                <p class="info-product__ingredient">Ingredientes: 100% Molleja de pollo deshidratada (Gallus gallus domesticus). Libre de grasa periférica y conservadores.</p>
+
+                <div class="nutrition-table">
+                    <div class="nutrition-table__header">📊 Análisis Garantizado</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parámetro</th>
+                                <th>Porcentaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Proteína Cruda (mín.)</td><td>68.0%</td></tr>
+                            <tr><td>Grasa Cruda (mín.)</td><td>8.0%</td></tr>
+                            <tr><td>Fibra Cruda (máx.)</td><td>1.5%</td></tr>
+                            <tr><td>Humedad (máx.)</td><td>8.5%</td></tr>
+                            <tr><td>Cenizas (máx.)</td><td>4.5%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="portions-card">
+                    <div class="portions-card__header">🍽️ Porciones Diarias Recomendadas</div>
+                    <div class="portions-card__body">
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐱</span>
+                            <span class="portion-row__size">Gatos y perros &lt; 5 kg</span>
+                            <span class="portion-row__amount">1 trocito chico al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕</span>
+                            <span class="portion-row__size">Perros chicos (5 a 10 kg)</span>
+                            <span class="portion-row__amount">1 pieza entera (o 3 trocitos) al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🦮</span>
+                            <span class="portion-row__size">Perros medianos (10 a 25 kg)</span>
+                            <span class="portion-row__amount">2 piezas enteras al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕‍🦺</span>
+                            <span class="portion-row__size">Perros grandes (&gt; 25 kg)</span>
+                            <span class="portion-row__amount">3 a 5 piezas enteras al día</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-conservation">
+                    <div class="info-conservation__icon">📦</div>
+                    <p><strong>Conservación:</strong> Consérvese en un lugar fresco y seco, lejos del sol. Este producto es un premio complementario; no sustituye una dieta completa. Consulte a su Médico Veterinario Zootecnista.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ PATITAS DE POLLO ═══ -->
+        <div class="info-panel" id="panel-patitas">
+            <div class="info-product">
+                <h2 class="info-product__name">Patitas de Pollo Deshidratadas</h2>
+                <p class="info-product__ingredient">Ingredientes: 100% Patita de pollo deshidratada. Sin sal, aditivos ni conservadores.</p>
+
+                <div class="nutrition-table">
+                    <div class="nutrition-table__header">📊 Análisis Garantizado</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parámetro</th>
+                                <th>Porcentaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Proteína Cruda (mín.)</td><td>52.0%</td></tr>
+                            <tr><td>Grasa Cruda (mín.)</td><td>15.5%</td></tr>
+                            <tr><td>Fibra Cruda (máx.)</td><td>1.2%</td></tr>
+                            <tr><td>Humedad (máx.)</td><td>8.0%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="portions-card">
+                    <div class="portions-card__header">🍽️ Porciones Diarias Recomendadas</div>
+                    <div class="portions-card__body">
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐱</span>
+                            <span class="portion-row__size">Gatos y perros &lt; 5 kg</span>
+                            <span class="portion-row__amount">1 patita al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕</span>
+                            <span class="portion-row__size">Perros chicos (5 a 10 kg)</span>
+                            <span class="portion-row__amount">1 a 2 patitas al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🦮</span>
+                            <span class="portion-row__size">Perros medianos (10 a 25 kg)</span>
+                            <span class="portion-row__amount">2 a 3 patitas al día</span>
+                        </div>
+                        <div class="portion-row">
+                            <span class="portion-row__icon">🐕‍🦺</span>
+                            <span class="portion-row__size">Perros grandes (&gt; 25 kg)</span>
+                            <span class="portion-row__amount">3 a 4 patitas al día</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-conservation">
+                    <div class="info-conservation__icon">📦</div>
+                    <p><strong>Conservación:</strong> Consérvese en un lugar fresco y seco, lejos del sol. Este producto es un premio complementario; no sustituye una dieta completa. Consulte a su Médico Veterinario Zootecnista.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA bottom -->
+        <div class="info-cta">
+            <div class="container">
+                <h3 style="font-size: var(--fs-h3); color: var(--color-brown-dark); margin-bottom: var(--space-md);">¿Te gustó lo que viste? 🐾</h3>
+                <div class="info-cta__buttons">
+                    <a href="https://wa.me/525528462102?text=¡Hola!%20Acabo%20de%20escanear%20el%20QR%20de%20mi%20producto%20y%20quiero%20pedir%20más%20🐾"
+                       class="btn btn--whatsapp btn--large"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       id="info-cta-whatsapp">
+                        <svg class="btn__icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        Pedir más por WhatsApp
+                    </a>
+                    <a href="index.html" class="btn btn--secondary btn--large" id="info-see-all-btn">
+                        Ver todos nuestros productos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer__logo">
+                <img src="assets/logos/logo-text.png" alt="Guaw & Miaw Pet Shop" width="140" height="auto" loading="lazy">
+            </div>
+            <p class="footer__text">Premios deshidratados naturales para perros y gatos. 🐾</p>
+            <div class="footer__bottom">
+                <p>© 2025 Guaw & Miaw Pet Shop. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
+    <script>
+        // ── Navbar scroll effect ──
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ── Mobile menu toggle ──
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // ── Product Tabs ──
+        const tabs = document.querySelectorAll('.info-tab');
+        const panels = document.querySelectorAll('.info-panel');
+
+        function activateTab(targetId) {
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+
+            const targetTab = document.querySelector(`.info-tab[data-target="${targetId}"]`);
+            const targetPanel = document.getElementById(`panel-${targetId}`);
+
+            if (targetTab) targetTab.classList.add('active');
+            if (targetPanel) targetPanel.classList.add('active');
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                activateTab(tab.dataset.target);
+            });
+        });
+
+        // ── Handle deep links from hash (#charales, #higados, etc.) ──
+        function handleHash() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash && document.getElementById(`panel-${hash}`)) {
+                activateTab(hash);
+                // Scroll to tabs
+                setTimeout(() => {
+                    document.getElementById('infoTabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
+        // Run on load and on hash change
+        handleHash();
+        window.addEventListener('hashchange', handleHash);
+    </script>
+
+</body>
+</html>
