@@ -1,0 +1,122 @@
+---
+import { products, CONSERVATION_NOTICE } from '../data/products';
+---
+
+<section class="info-section container" id="info">
+  <header style="text-align:center; margin-bottom: var(--space-4);">
+    <span class="eyebrow">transparencia total</span>
+    <h2 class="display-2">Información de cada premio</h2>
+    <p class="lead" style="margin-inline:auto;">Análisis garantizado, porciones recomendadas y calculadora para dar la porción exacta.</p>
+  </header>
+
+  {products.map((p, i) => (
+    <article
+      class:list={['info-card', 'reveal', { flip: i % 2 === 1 }]}
+      id={`info-${p.id}`}
+      style={`--accent: ${p.accent}; margin-bottom: var(--space-4);`}
+    >
+      <div class="info-card__media">
+        <img src={p.label.src} alt={`Etiqueta de ${p.name}`} loading="lazy" width="420" />
+      </div>
+
+      <div class="info-card__body">
+        <span class="eyebrow">{p.emoji} {p.proteinLabel}</span>
+        <h3 class="info-card__title">{p.name}</h3>
+        <p class="info-card__ingredients"><strong>Ingredientes:</strong> {p.ingredients}</p>
+
+        <div class="benefits">
+          {p.benefits.map((b) => <span class="benefit">{b}</span>)}
+        </div>
+
+        <div class="panel">
+          <h4>📊 Análisis garantizado</h4>
+          <table class="nutrition-table">
+            <tbody>
+              {p.nutrition.map((row) => (
+                <tr><td>{row.label}</td><td>{row.value}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <h4>🍽️ {p.portionsTitle}</h4>
+          {p.portions.map((row) => (
+            <div class="portion-row">
+              <span class="portion-row__icon">{row.icon}</span>
+              <span class="portion-row__size">{row.petSize}</span>
+              <span class="portion-row__amount">{row.amount}</span>
+            </div>
+          ))}
+        </div>
+
+        <div class="calculator" data-calculator={p.id} data-ranges={JSON.stringify(p.calc.ranges)}>
+          <p class="calculator__title">🐾 Calcula la porción exacta</p>
+          <div class="calculator__controls">
+            <span style="font-weight: 700;">Mi mascota pesa:</span>
+            <div class="calculator__input-group">
+              <input type="number" min="1" max="80" value="6" data-weight-input aria-label={`Peso en kg para ${p.shortName}`} />
+              <span>KG</span>
+            </div>
+          </div>
+          <div class="calculator__result">
+            <span class="calculator__result-value" data-result>—</span>
+            <span class="calculator__result-label">{p.calc.unit}</span>
+          </div>
+        </div>
+
+        {p.note && <div class="info-note">⚠️ {p.note}</div>}
+
+        <div class="info-conservation">
+          <span class="info-conservation__icon">📦</span>
+          <p><strong>Conservación:</strong> {CONSERVATION_NOTICE}</p>
+        </div>
+
+        <div class="slide__actions" style="margin-top: var(--space-2);">
+          <a
+            href={`https://wa.me/525528462102?text=${encodeURIComponent(p.waMessage)}`}
+            class="btn btn--primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pedir {p.shortName}
+          </a>
+        </div>
+      </div>
+    </article>
+  ))}
+</section>
+
+<script>
+  // Calculadoras de porción: una por producto, con sus rangos propios
+  document.querySelectorAll<HTMLElement>('[data-calculator]').forEach((calc) => {
+    const input = calc.querySelector<HTMLInputElement>('[data-weight-input]');
+    const result = calc.querySelector<HTMLElement>('[data-result]');
+
+    if (!input || !result) return;
+
+    // Rangos se leen del data model renderizado en el HTML
+    const ranges: { maxKg: number; result: string }[] = JSON.parse(
+      calc.dataset.ranges ?? '[]'
+    );
+
+    const compute = (kg: number): string => {
+      for (const r of ranges) if (kg <= r.maxKg) return r.result;
+      return '—';
+    };
+
+    const update = () => {
+      const kg = parseFloat(input.value);
+      if (Number.isNaN(kg) || kg <= 0) {
+        result.textContent = '—';
+        return;
+      }
+      result.textContent = compute(kg);
+      result.style.transform = 'scale(1.15)';
+      setTimeout(() => (result.style.transform = 'scale(1)'), 150);
+    };
+
+    input.addEventListener('input', update);
+    update();
+  });
+</script>

@@ -1,0 +1,21 @@
+---
+import { SITE, waLink } from '../data/products';
+import logoMain from '../assets/logos/logo-main.png';
+---
+
+<nav class="navbar" id="navbar">
+  <div class="container navbar__inner">
+    <a href="#inicio" class="navbar__logo">
+      <img src={logoMain.src} alt={SITE.fullName} width="46" height="46" />
+      {SITE.name}
+    </a>
+    <div class="navbar__links">
+      <a href="#productos">Productos</a>
+      <a href="#info">Información</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <a href={waLink('¡Hola! Me interesan los premios deshidratados 🐾')} class="btn btn--primary" target="_blank" rel="noopener noreferrer">
+      Pedir ahora
+    </a>
+  </div>
+</nav>

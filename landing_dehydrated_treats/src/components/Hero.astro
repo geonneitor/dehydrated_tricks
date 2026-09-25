@@ -1,0 +1,66 @@
+---
+import { SITE } from '../data/products';
+import mascot from '../assets/mascot/mascot-frontal.png';
+import kibbleHeart from '../assets/kibble/kibble-heart.png';
+import kibbleFlower from '../assets/kibble/kibble-flower.png';
+---
+
+<section class="hero" id="inicio">
+  <div class="hero__bg" aria-hidden="true">
+    <div class="blob blob--1"></div>
+    <div class="blob blob--2"></div>
+    <div class="blob blob--3"></div>
+  </div>
+
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <span class="eyebrow">🐾 100% natural · un solo ingrediente</span>
+      <h1 class="display-1">
+        El mejor premio
+        <img src={kibbleHeart.src} alt="" class="inline-kibble" /> para tu
+        <span class="accent-script">mascota</span>
+      </h1>
+      <p class="lead">{SITE.claim} Nutrición real que tu familia merece.</p>
+
+      <div class="hero__actions">
+        <a href="#productos" class="btn btn--primary">Ver premios</a>
+        <a
+          href={`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent('¡Hola! Me interesan los premios deshidratados 🐾')}`}
+          class="btn btn--ghost"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Pedir por WhatsApp
+        </a>
+      </div>
+
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <strong>1</strong>
+          <span>Ingrediente</span>
+        </div>
+        <div class="hero__stat">
+          <strong>0</strong>
+          <span>Conservadores</span>
+        </div>
+        <div class="hero__stat">
+          <strong>68%</strong>
+          <span>Proteína máx.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__mascot">
+      <img src={mascot.src} alt="Mascota de Guaw & Miaw" width="420" />
+      <svg class="stamp" viewBox="0 0 100 100" aria-hidden="true">
+        <path id="circlePath" fill="none" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+        <text font-family="Nunito, sans-serif" font-weight="900" font-size="12.5" fill="#5c3a1e" letter-spacing="1.5">
+          <textPath href="#circlePath">100% NATURAL · SIN CONSERVADORES ·</textPath>
+        </text>
+        <circle cx="50" cy="50" r="12" fill="#d4294b" />
+      </svg>
+      <img src={kibbleFlower.src} alt="" class="float-kibble float-kibble--a" aria-hidden="true" />
+      <img src={kibbleHeart.src} alt="" class="float-kibble float-kibble--b" aria-hidden="true" />
+    </div>
+  </div>
+</section>

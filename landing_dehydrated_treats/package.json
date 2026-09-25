@@ -1,0 +1,25 @@
+{
+  "name": "guaw-miaw-landing",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Landing de Guaw & Miaw Pet Shop — premios deshidratados naturales para perros y gatos",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.3.5"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

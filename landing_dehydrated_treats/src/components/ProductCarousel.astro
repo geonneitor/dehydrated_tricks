@@ -1,0 +1,119 @@
+---
+import { products } from '../data/products';
+---
+
+<section class="carousel-section" id="productos">
+  <!-- Fondos dinámicos: una capa gradiente por producto -->
+  <div class="carousel-bg" aria-hidden="true">
+    {products.map((p, i) => (
+      <div
+        class:list={['carousel-bg__layer', { active: i === 0 }]}
+        data-bg-index={i}
+        style={`background: ${p.gradient};`}
+      />
+    ))}
+  </div>
+
+  <div class="container">
+    <header class="carousel-section__head">
+      <span class="eyebrow">nuestros premios</span>
+      <h2 class="display-2">Cada uno, un solo ingrediente</h2>
+      <p>Desliza y descubre el premio perfecto para tu peludo.</p>
+    </header>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel__viewport">
+        <div class="carousel__track">
+          {products.map((p) => (
+            <article class="slide" data-slide>
+              <div class="slide__media">
+                <img src={p.label.src} alt={p.name} loading="lazy" width="440" />
+                <span class="slide__protein">{p.proteinLabel}</span>
+              </div>
+              <div class="slide__info">
+                <span class="slide__tagline">{p.tagline}</span>
+                <h3>{p.name}</h3>
+                <p class="slide__desc">{p.description}</p>
+                <div class="chips">
+                  {p.benefits.map((b) => <span class="chip">{b}</span>)}
+                </div>
+                <div class="slide__actions">
+                  <a
+                    href={`https://wa.me/525528462102?text=${encodeURIComponent(p.waMessage)}`}
+                    class="btn btn--primary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Pedir por WhatsApp
+                  </a>
+                  <a href={`#info-${p.id}`} class="slide__detail-link">Ver información ↓</a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <button class="carousel__arrow carousel__arrow--prev" data-prev aria-label="Producto anterior">←</button>
+      <button class="carousel__arrow carousel__arrow--next" data-next aria-label="Producto siguiente">→</button>
+
+      <div class="carousel__dots" data-dots>
+        {products.map((p, i) => (
+          <button
+            class:list={['carousel__dot', { active: i === 0 }]}
+            data-dot-index={i}
+            aria-label={`Ir a ${p.name}`}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const section = document.querySelector('[data-carousel]')?.closest('.carousel-section');
+  const carousel = document.querySelector('[data-carousel]');
+
+  if (section && carousel) {
+    const track = carousel.querySelector<HTMLElement>('[data-carousel-track], .carousel__track')!;
+    const slides = [...carousel.querySelectorAll<HTMLElement>('[data-slide]')];
+    const dots = [...carousel.querySelectorAll<HTMLButtonElement>('[data-dot-index]')];
+    const bgLayers = [...section.querySelectorAll<HTMLElement>('[data-bg-index]')];
+    const prev = carousel.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = carousel.querySelector<HTMLButtonElement>('[data-next]')!;
+
+    let index = 0;
+    let autoTimer: number | undefined;
+
+    function goTo(i: number) {
+      index = (i + slides.length) % slides.length;
+      track.style.transform = `translateX(-${index * 100}%)`;
+
+      dots.forEach((d, di) => d.classList.toggle('active', di === index));
+      bgLayers.forEach((l, li) => l.classList.toggle('active', li === index));
+    }
+
+    function restartAuto() {
+      if (autoTimer) clearInterval(autoTimer);
+      // Auto-avance suave después de 6s sin interacción
+      autoTimer = window.setInterval(() => goTo(index + 1), 6000);
+    }
+
+    prev.addEventListener('click', () => { goTo(index - 1); restartAuto(); });
+    next.addEventListener('click', () => { goTo(index + 1); restartAuto(); });
+    dots.forEach((dot, di) => dot.addEventListener('click', () => { goTo(di); restartAuto(); }));
+
+    // Swipe táctil
+    let startX = 0;
+    carousel.addEventListener('pointerdown', (e) => { startX = (e as PointerEvent).clientX; });
+    carousel.addEventListener('pointerup', (e) => {
+      const dx = (e as PointerEvent).clientX - startX;
+      if (Math.abs(dx) > 50) {
+        goTo(dx < 0 ? index + 1 : index - 1);
+        restartAuto();
+      }
+    });
+
+    restartAuto();
+  }
+</script>

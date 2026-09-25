@@ -1,0 +1,10 @@
+---
+const items = ['100% NATURAL', 'UN SOLO INGREDIENTE', 'SIN CONSERVADORES', 'HECHO EN MÉXICO', 'ALTO EN PROTEÍNA', 'PREMIOS DESHIDRATADOS'];
+const track = [...items, ...items];
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {track.map((item, i) => <span>{item} {i % 2 === 0 ? <em>🐾</em> : '·'}</span>)}
+  </div>
+</div>
