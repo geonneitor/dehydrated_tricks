@@ -1,5 +1,5 @@
 ---
-import { products } from '../data/products';
+import { products, waLink } from '../data/products';
 import charalesMascot from '../assets/scenes/charales-mascot.png';
 ---
 
@@ -120,7 +120,7 @@ import charalesMascot from '../assets/scenes/charales-mascot.png';
                 </div>
                 <div class="slide__actions">
                   <a
-                    href={`https://wa.me/525528462102?text=${encodeURIComponent(p.waMessage)}`}
+                    href={waLink(p.waMessage)}
                     class="btn btn--primary"
                     target="_blank"
                     rel="noopener noreferrer"

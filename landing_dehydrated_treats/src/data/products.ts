@@ -123,7 +123,7 @@ export const products: Product[] = [
     shortName: 'Hígado de Res',
     tagline: 'El premio clásico que nunca falla',
     description:
-      'Hígado de res liofilizado al sol de la manera tradicional. El premio de entrenamiento favorito: aroma irresistible, textura firme y nutrición concentrated en un solo ingrediente.',
+      'Hígado de res liofilizado al sol de la manera tradicional. El premio de entrenamiento favorito: aroma irresistible, textura firme y nutrición concentrada en un solo ingrediente.',
     benefits: ['Monoproteico', 'Alto en hierro', 'Ideal para entrenar', 'Aroma irresistible'],
     protein: 64,
     proteinLabel: '64% Proteína',

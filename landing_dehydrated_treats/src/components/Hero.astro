@@ -1,5 +1,5 @@
 ---
-import { SITE } from '../data/products';
+import { SITE, waLink } from '../data/products';
 import mascot from '../assets/mascot/mascot-frontal.png';
 import kibbleHeart from '../assets/kibble/kibble-heart.png';
 import kibbleFlower from '../assets/kibble/kibble-flower.png';
@@ -25,7 +25,7 @@ import kibbleFlower from '../assets/kibble/kibble-flower.png';
       <div class="hero__actions">
         <a href="#productos" class="btn btn--primary">Ver premios</a>
         <a
-          href={`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent('¡Hola! Me interesan los premios deshidratados 🐾')}`}
+          href={waLink('¡Hola! Me interesan los premios deshidratados 🐾')}
           class="btn btn--ghost"
           target="_blank"
           rel="noopener noreferrer"

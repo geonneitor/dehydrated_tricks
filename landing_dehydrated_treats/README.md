@@ -32,6 +32,8 @@ references/            # Imágenes de referencia de diseño (no se publican)
 | `npm run dev`     | Servidor de desarrollo en `localhost:4321`|
 | `npm run build`   | Build de producción a `./dist/`           |
 | `npm run preview` | Previsualizar el build localmente         |
+| `npm run check`   | Typecheck y diagnóstico de `.astro`       |
+| `npm run astro …` | CLI de Astro (sync, info, etc.)           |
 
 ## 🚀 Deploy
 
