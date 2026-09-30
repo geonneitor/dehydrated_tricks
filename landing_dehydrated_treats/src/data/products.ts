@@ -56,7 +56,14 @@ export interface Product {
   label: ImageMetadata;
   /** Gradiente de fondo dinámico del carrusel */
   gradient: string;
+  /** Acento claro del tema (chips, botones, detalles) */
   accent: string;
+  /** Tono profundo del acento (hovers, sombras, marquee) */
+  accentDeep: string;
+  /** Color de texto legible sobre el acento */
+  textOnAccent: string;
+  /** Escena animada del slide (ver ProductCarousel.astro) */
+  scene: 'charales' | 'higados' | 'orejas' | 'mollejas' | 'patitas';
   waMessage: string;
 }
 
@@ -104,6 +111,9 @@ export const products: Product[] = [
     label: labelCharales,
     gradient: 'linear-gradient(135deg, #0E3A4A 0%, #1B6E8C 55%, #2E93B4 100%)',
     accent: '#7FD1E8',
+    accentDeep: '#1B6E8C',
+    textOnAccent: '#0E3A4A',
+    scene: 'charales',
     waMessage: '¡Hola! Me interesan los Charales deshidratados 🐟',
   },
   {
@@ -144,6 +154,9 @@ export const products: Product[] = [
     label: labelHigados,
     gradient: 'linear-gradient(135deg, #4A1520 0%, #8C2332 55%, #B23A47 100%)',
     accent: '#FF9AA8',
+    accentDeep: '#8C2332',
+    textOnAccent: '#4A1520',
+    scene: 'higados',
     waMessage: '¡Hola! Me interesa el Hígado de Res deshidratado 🥩',
   },
   {
@@ -185,6 +198,9 @@ export const products: Product[] = [
     label: labelOrejas,
     gradient: 'linear-gradient(135deg, #6B3244 0%, #C96F8E 60%, #E89BB4 100%)',
     accent: '#FFC9D6',
+    accentDeep: '#C96F8E',
+    textOnAccent: '#6B3244',
+    scene: 'orejas',
     waMessage: '¡Hola! Me interesan las Orejas de Cerdo deshidratadas 🐷',
   },
   {
@@ -225,6 +241,9 @@ export const products: Product[] = [
     label: labelMollejas,
     gradient: 'linear-gradient(135deg, #5C3A0E 0%, #C98A2D 60%, #E0A94E 100%)',
     accent: '#FFD98A',
+    accentDeep: '#C98A2D',
+    textOnAccent: '#5C3A0E',
+    scene: 'mollejas',
     waMessage: '¡Hola! Me interesan las Mollejas de Pollo deshidratadas 🍗',
   },
   {
@@ -264,6 +283,9 @@ export const products: Product[] = [
     label: labelPatitas,
     gradient: 'linear-gradient(135deg, #6B4423 0%, #B98A5A 60%, #D9B08C 100%)',
     accent: '#FFE3C2',
+    accentDeep: '#B98A5A',
+    textOnAccent: '#6B4423',
+    scene: 'patitas',
     waMessage: '¡Hola! Me interesan las Patitas de Pollo deshidratadas 🐔',
   },
 ];

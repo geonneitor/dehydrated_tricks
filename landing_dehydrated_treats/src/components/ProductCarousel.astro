@@ -1,8 +1,9 @@
 ---
 import { products } from '../data/products';
+import charalesMascot from '../assets/scenes/charales-mascot.png';
 ---
 
-<section class="carousel-section" id="productos">
+<section class="carousel-section" id="productos" data-theme-section>
   <!-- Fondos dinámicos: una capa gradiente por producto -->
   <div class="carousel-bg" aria-hidden="true">
     {products.map((p, i) => (
@@ -21,13 +22,93 @@ import { products } from '../data/products';
       <p>Desliza y descubre el premio perfecto para tu peludo.</p>
     </header>
 
+    <!-- Pestañas protagónicas: emoji + nombre, píldora del color del producto -->
+    <div class="product-tabs" role="tablist" aria-label="Elegir producto" data-tabs>
+      {products.map((p, i) => (
+        <button
+          class:list={['product-tab', { active: i === 0 }]}
+          role="tab"
+          aria-selected={i === 0 ? 'true' : 'false'}
+          data-tab-index={i}
+          style={`--tab-accent: ${p.accentDeep}; --tab-accent-soft: ${p.accent};`}
+        >
+          <span class="product-tab__emoji" aria-hidden="true">{p.emoji}</span>
+          <span class="product-tab__name">{p.shortName}</span>
+        </button>
+      ))}
+    </div>
+
     <div class="carousel" data-carousel>
       <div class="carousel__viewport">
-        <div class="carousel__track">
-          {products.map((p) => (
-            <article class="slide" data-slide>
+        <div class="carousel__track" data-carousel-track>
+          {products.map((p, i) => (
+            <article class="slide" data-slide data-scene={p.scene} style={`--slide-accent: ${p.accent}; --slide-accent-deep: ${p.accentDeep}; --slide-text-on-accent: ${p.textOnAccent};`}>
+              <!-- Escena animada detrás del contenido (CSS puro) -->
+              <div class="scene" aria-hidden="true">
+                {p.scene === 'charales' && (
+                  <>
+                    <span class="wave wave--1"></span>
+                    <span class="wave wave--2"></span>
+                    <svg class="fish fish--1" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
+                    <svg class="fish fish--2" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
+                    <svg class="fish fish--3" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
+                    <svg class="fish fish--4" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
+                    <svg class="fish fish--5" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
+                    <span class="bubble bubble--1"></span>
+                    <span class="bubble bubble--2"></span>
+                    <span class="bubble bubble--3"></span>
+                  </>
+                )}
+                {p.scene === 'higados' && (
+                  <>
+                    <span class="steam steam--1"></span>
+                    <span class="steam steam--2"></span>
+                    <span class="steam steam--3"></span>
+                    <svg class="scene-deco deco-heart-1" viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/></svg>
+                    <svg class="scene-deco deco-heart-2" viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/></svg>
+                  </>
+                )}
+                {p.scene === 'orejas' && (
+                  <>
+                    <svg class="scene-deco deco-paw-1" viewBox="0 0 24 24"><path d="M12 13c-2.5 0-5 2-5 4.5 0 1.5 1.2 2.5 2.5 2.5 1 0 1.7-.5 2.5-.5s1.5.5 2.5.5c1.3 0 2.5-1 2.5-2.5C17 15 14.5 13 12 13zM6.5 8.5A1.8 1.8 0 1 0 6.5 4.9a1.8 1.8 0 0 0 0 3.6zm4-1A1.8 1.8 0 1 0 10.5 3.9 1.8 1.8 0 0 0 10.5 7.5zm3 0a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zm4 1a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6z"/></svg>
+                    <svg class="scene-deco deco-paw-2" viewBox="0 0 24 24"><path d="M12 13c-2.5 0-5 2-5 4.5 0 1.5 1.2 2.5 2.5 2.5 1 0 1.7-.5 2.5-.5s1.5.5 2.5.5c1.3 0 2.5-1 2.5-2.5C17 15 14.5 13 12 13zM6.5 8.5A1.8 1.8 0 1 0 6.5 4.9a1.8 1.8 0 0 0 0 3.6zm4-1A1.8 1.8 0 1 0 10.5 3.9 1.8 1.8 0 0 0 10.5 7.5zm3 0a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zm4 1a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6z"/></svg>
+                    <svg class="scene-deco deco-paw-3" viewBox="0 0 24 24"><path d="M12 13c-2.5 0-5 2-5 4.5 0 1.5 1.2 2.5 2.5 2.5 1 0 1.7-.5 2.5-.5s1.5.5 2.5.5c1.3 0 2.5-1 2.5-2.5C17 15 14.5 13 12 13zM6.5 8.5A1.8 1.8 0 1 0 6.5 4.9a1.8 1.8 0 0 0 0 3.6zm4-1A1.8 1.8 0 1 0 10.5 3.9 1.8 1.8 0 0 0 10.5 7.5zm3 0a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zm4 1a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6z"/></svg>
+                  </>
+                )}
+                {p.scene === 'mollejas' && (
+                  <>
+                    <svg class="scene-deco deco-feather-1" viewBox="0 0 24 24"><path d="M20 4c-6 0-12 4-14 10l-2 6 1 1 6-2c6-2 10-8 10-14v-1zm-7 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+                    <svg class="scene-deco deco-feather-2" viewBox="0 0 24 24"><path d="M20 4c-6 0-12 4-14 10l-2 6 1 1 6-2c6-2 10-8 10-14v-1zm-7 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+                    <svg class="scene-deco deco-feather-3" viewBox="0 0 24 24"><path d="M20 4c-6 0-12 4-14 10l-2 6 1 1 6-2c6-2 10-8 10-14v-1zm-7 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+                  </>
+                )}
+                {p.scene === 'patitas' && (
+                  <>
+                    <span class="crumb crumb--1"></span>
+                    <span class="crumb crumb--2"></span>
+                    <span class="crumb crumb--3"></span>
+                    <span class="crumb crumb--4"></span>
+                    <span class="crumb crumb--5"></span>
+                  </>
+                )}
+              </div>
+
               <div class="slide__media">
-                <img src={p.label.src} alt={p.name} loading="lazy" width="440" />
+                {p.scene === 'charales' && (
+                  <figure class="slide__polaroid">
+                    <img
+                      src={charalesMascot.src}
+                      alt="Mascota de Guaw & Miaw disfrutando charales deshidratados"
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      width={charalesMascot.width}
+                      height={charalesMascot.height}
+                    />
+                    <figcaption>¡Guau y Miaw aprobados! 🐟</figcaption>
+                  </figure>
+                )}
+                {p.scene !== 'charales' && (
+                  <img src={p.label.src} alt={p.name} loading={i === 0 ? 'eager' : 'lazy'} width={p.label.width} height={p.label.height} />
+                )}
                 <span class="slide__protein">{p.proteinLabel}</span>
               </div>
               <div class="slide__info">
@@ -46,7 +127,6 @@ import { products } from '../data/products';
                   >
                     Pedir por WhatsApp
                   </a>
-                  <a href={`#info-${p.id}`} class="slide__detail-link">Ver información ↓</a>
                 </div>
               </div>
             </article>
@@ -56,52 +136,73 @@ import { products } from '../data/products';
 
       <button class="carousel__arrow carousel__arrow--prev" data-prev aria-label="Producto anterior">←</button>
       <button class="carousel__arrow carousel__arrow--next" data-next aria-label="Producto siguiente">→</button>
-
-      <div class="carousel__dots" data-dots>
-        {products.map((p, i) => (
-          <button
-            class:list={['carousel__dot', { active: i === 0 }]}
-            data-dot-index={i}
-            aria-label={`Ir a ${p.name}`}
-          />
-        ))}
-      </div>
     </div>
   </div>
+
+  <!-- Símbolos SVG compartidos por las escenas -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="fish-shape">
+        <path d="M4 20 C14 8, 40 6, 52 18 L60 12 L56 22 L60 30 L52 26 C40 36, 14 32, 4 20 Z" fill="currentColor" />
+        <circle cx="14" cy="18" r="2.2" fill="rgba(255,255,255,0.85)" />
+        <circle cx="14.8" cy="18.4" r="1" fill="rgba(14,58,74,0.9)" />
+      </g>
+    </defs>
+  </svg>
 </section>
 
 <script>
-  const section = document.querySelector('[data-carousel]')?.closest('.carousel-section');
+  const section = document.querySelector('[data-theme-section]');
   const carousel = document.querySelector('[data-carousel]');
 
   if (section && carousel) {
-    const track = carousel.querySelector<HTMLElement>('[data-carousel-track], .carousel__track')!;
+    const track = carousel.querySelector<HTMLElement>('[data-carousel-track]')!;
     const slides = [...carousel.querySelectorAll<HTMLElement>('[data-slide]')];
-    const dots = [...carousel.querySelectorAll<HTMLButtonElement>('[data-dot-index]')];
+    const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-tab-index]')];
     const bgLayers = [...section.querySelectorAll<HTMLElement>('[data-bg-index]')];
     const prev = carousel.querySelector<HTMLButtonElement>('[data-prev]')!;
     const next = carousel.querySelector<HTMLButtonElement>('[data-next]')!;
 
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     let index = 0;
     let autoTimer: number | undefined;
+
+    function applyTheme(i: number) {
+      const id = slides[i]?.dataset.scene;
+      if (!id) return;
+      // Pinta navbar/marquee/acento global con el producto activo.
+      document.body.dataset.theme = id;
+    }
 
     function goTo(i: number) {
       index = (i + slides.length) % slides.length;
       track.style.transform = `translateX(-${index * 100}%)`;
 
-      dots.forEach((d, di) => d.classList.toggle('active', di === index));
+      slides.forEach((s, si) => s.classList.toggle('active', si === index));
+      tabs.forEach((t, ti) => {
+        t.classList.toggle('active', ti === index);
+        t.setAttribute('aria-selected', ti === index ? 'true' : 'false');
+      });
       bgLayers.forEach((l, li) => l.classList.toggle('active', li === index));
+      applyTheme(index);
     }
 
     function restartAuto() {
+      if (reducedMotion) return;
       if (autoTimer) clearInterval(autoTimer);
-      // Auto-avance suave después de 6s sin interacción
-      autoTimer = window.setInterval(() => goTo(index + 1), 6000);
+      // Auto-avance suave después de 7s sin interacción
+      autoTimer = window.setInterval(() => goTo(index + 1), 7000);
+    }
+
+    function stopAuto() {
+      if (autoTimer) clearInterval(autoTimer);
+      autoTimer = undefined;
     }
 
     prev.addEventListener('click', () => { goTo(index - 1); restartAuto(); });
     next.addEventListener('click', () => { goTo(index + 1); restartAuto(); });
-    dots.forEach((dot, di) => dot.addEventListener('click', () => { goTo(di); restartAuto(); }));
+    tabs.forEach((tab, ti) => tab.addEventListener('click', () => { goTo(ti); restartAuto(); }));
 
     // Swipe táctil
     let startX = 0;
@@ -114,6 +215,26 @@ import { products } from '../data/products';
       }
     });
 
+    // Teclado ← → sobre el carrusel
+    carousel.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'ArrowLeft') { goTo(index - 1); restartAuto(); }
+      if ((e as KeyboardEvent).key === 'ArrowRight') { goTo(index + 1); restartAuto(); }
+    });
+
+    // Pausa auto-avance + animaciones cuando la sección no está en viewport
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        section.classList.toggle('scene-paused', !entry.isIntersecting);
+        // El tinte global (marquee/navbar) solo vive mientras el carrusel se ve
+        document.body.classList.toggle('theme-live', entry.isIntersecting);
+        if (entry.isIntersecting) restartAuto();
+        else stopAuto();
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(section);
+
     restartAuto();
+    goTo(0);
   }
 </script>

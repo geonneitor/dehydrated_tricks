@@ -19,7 +19,7 @@ import logoText from '../assets/logos/logo-text.png';
 
 <footer class="footer">
   <div class="container footer__grid">
-    <img src={logoText.src} alt={SITE.fullName} width="150" />
+    <img src={logoText.src} alt={SITE.fullName} width={logoText.width} height={logoText.height} loading="lazy" />
     <p class="footer__text">{SITE.tagline} 🐾</p>
     <p>© {SITE.year} {SITE.fullName}. Todos los derechos reservados.</p>
   </div>

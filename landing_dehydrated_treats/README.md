@@ -9,7 +9,6 @@ Construida con [Astro](https://astro.build) — cero JS de framework en el clien
 - **Hero** con mascota flotante, sello giratorio y blobs animados de fondo
 - **Marquee** infinito con mensajes de marca
 - **Carrusel de productos** con fondo dinámico que cambia de gradiente según el producto (auto-avance, flechas, dots y swipe táctil)
-- **Información por producto**: beneficios, análisis garantizado, porciones recomendadas y calculadora interactiva de porciones por peso
 - **CTA final + FAB de WhatsApp** con mensajes precargados por producto
 
 ## 📁 Estructura

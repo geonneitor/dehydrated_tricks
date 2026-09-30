@@ -36,6 +36,57 @@
   --shadow-soft: 0 20px 60px -20px rgba(42, 26, 14, 0.25);
   --shadow-card: 0 10px 40px -12px rgba(42, 26, 14, 0.18);
   --container: 1200px;
+
+  /* Tema dinámico por producto (JS lo actualiza al cambiar de slide).
+     Por defecto usan la marca rosa para que hero/footer no cambien. */
+  --theme-accent: var(--pink);
+  --theme-accent-deep: var(--pink-deep);
+  --theme-text-on-accent: var(--white);
+  --theme-accent-rgb: 212, 41, 75;
+  --theme-soft: var(--pink-soft);
+
+  --theme-transition: 0.7s ease;
+}
+
+/* Pestaña del carrusel activa → pinta navbar y marquee */
+body[data-theme='charales'] {
+  --theme-accent: #1B6E8C;
+  --theme-accent-deep: #0E3A4A;
+  --theme-text-on-accent: #EAF7FB;
+  --theme-accent-rgb: 27, 110, 140;
+  --theme-soft: #7FD1E8;
+}
+
+body[data-theme='higados'] {
+  --theme-accent: #8C2332;
+  --theme-accent-deep: #4A1520;
+  --theme-text-on-accent: #FBEAEC;
+  --theme-accent-rgb: 140, 35, 50;
+  --theme-soft: #FF9AA8;
+}
+
+body[data-theme='orejas'] {
+  --theme-accent: #C96F8E;
+  --theme-accent-deep: #6B3244;
+  --theme-text-on-accent: #FDF1F5;
+  --theme-accent-rgb: 201, 111, 142;
+  --theme-soft: #FFC9D6;
+}
+
+body[data-theme='mollejas'] {
+  --theme-accent: #C98A2D;
+  --theme-accent-deep: #5C3A0E;
+  --theme-text-on-accent: #FDF6E9;
+  --theme-accent-rgb: 201, 138, 45;
+  --theme-soft: #FFD98A;
+}
+
+body[data-theme='patitas'] {
+  --theme-accent: #B98A5A;
+  --theme-accent-deep: #6B4423;
+  --theme-text-on-accent: #FBF3E8;
+  --theme-accent-rgb: 185, 138, 90;
+  --theme-soft: #FFE3C2;
 }
 
 /* ── Reset ── */
@@ -61,6 +112,7 @@ body {
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -199,6 +251,25 @@ button {
   background: rgba(250, 243, 235, 0.85);
   backdrop-filter: blur(14px);
   box-shadow: 0 4px 30px rgba(42, 26, 14, 0.08);
+}
+
+/* Tinte dinámico del navbar (sigue al producto activo) */
+.navbar__links a::after,
+.navbar .btn--primary {
+  transition: background var(--theme-transition), box-shadow var(--theme-transition), transform 0.25s;
+}
+
+.navbar.scrolled .navbar__links a::after {
+  background: var(--theme-accent);
+}
+
+.navbar.scrolled .btn--primary {
+  background: var(--theme-accent);
+  box-shadow: 0 12px 30px -10px rgba(var(--theme-accent-rgb), 0.55);
+}
+
+.navbar.scrolled .btn--primary:hover {
+  background: var(--theme-accent-deep);
 }
 
 .navbar__inner {
@@ -366,7 +437,9 @@ button {
   justify-self: center;
 }
 
-.hero__mascot > img {
+.hero__mascot > .mascot-img {
+  position: relative;
+  z-index: 2; /* la mascota siempre por encima de las decoraciones */
   width: min(420px, 78vw);
   filter: drop-shadow(0 30px 40px rgba(42, 26, 14, 0.22));
   animation: mascot-float 5s ease-in-out infinite;
@@ -380,8 +453,9 @@ button {
 /* Sello circular giratorio */
 .stamp {
   position: absolute;
-  top: -1.5rem;
-  right: -1rem;
+  top: -3rem;
+  right: -2.5rem;
+  z-index: 3;
   width: 118px;
   height: 118px;
   animation: stamp-rotate 16s linear infinite;
@@ -391,17 +465,18 @@ button {
   to { transform: rotate(360deg); }
 }
 
-/* Croquetas flotantes decorativas */
+/* Croquetas flotantes decorativas (detrás de la mascota, en las esquinas) */
 .float-kibble {
   position: absolute;
-  width: 54px;
-  opacity: 0.9;
+  z-index: 1;
+  width: 46px;
+  opacity: 0.85;
   animation: kibble-bob 7s ease-in-out infinite;
   filter: drop-shadow(0 8px 12px rgba(42, 26, 14, 0.18));
 }
 
-.float-kibble--a { top: 8%; left: -14%; animation-delay: -2s; }
-.float-kibble--b { bottom: 6%; right: -10%; width: 42px; animation-delay: -4.5s; }
+.float-kibble--a { top: -4%; left: -22%; animation-delay: -2s; }
+.float-kibble--b { bottom: 14%; right: -20%; width: 36px; animation-delay: -4.5s; }
 
 @keyframes kibble-bob {
   0%, 100% { transform: translateY(0) rotate(-10deg); }
@@ -449,6 +524,20 @@ button {
   overflow: hidden;
   padding-block: 1.1rem;
   transform: rotate(-1.2deg) scale(1.02);
+  transition: background var(--theme-transition);
+}
+
+/* Cuando el carrusel está en viewport, el marquee toma el tono del producto */
+body.theme-live .marquee {
+  background: var(--theme-accent-deep);
+}
+
+.marquee__track em {
+  transition: color var(--theme-transition);
+}
+
+body.theme-live .marquee__track em {
+  color: var(--theme-soft);
 }
 
 .marquee__track {
@@ -533,6 +622,9 @@ button {
 }
 
 .slide {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   flex: 0 0 100%;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -630,6 +722,266 @@ button {
   padding-bottom: 2px;
 }
 
+/* ── Pestañas protagónicas (emoji + nombre) ── */
+
+.product-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: var(--space-3);
+}
+
+.product-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--white);
+  font-weight: 800;
+  font-size: 0.92rem;
+  border: 2px solid transparent;
+  backdrop-filter: blur(8px);
+  transition: background 0.35s, color 0.35s, border-color 0.35s, transform 0.25s, box-shadow 0.35s;
+}
+
+.product-tab:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.product-tab__emoji { font-size: 1.15rem; line-height: 1; }
+
+.product-tab.active {
+  background: var(--tab-accent-soft);
+  color: var(--tab-accent);
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px) scale(1.04);
+}
+
+/* ── Escenas animadas dentro del slide ── */
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Pausa global (sección fuera de viewport) */
+.scene-paused .scene *,
+.scene-paused .scene {
+  animation-play-state: paused !important;
+}
+
+/* 🐟 Charales: oleaje, peces y burbujas */
+.wave {
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: 42%;
+  border-radius: 45%;
+  opacity: 0.16;
+}
+
+.wave--1 {
+  bottom: -18%;
+  background: var(--slide-accent-deep);
+  animation: wave-drift 11s ease-in-out infinite alternate;
+}
+
+.wave--2 {
+  bottom: -24%;
+  background: var(--slide-accent);
+  opacity: 0.2;
+  animation: wave-drift 14s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes wave-drift {
+  from { transform: translateX(-4%) rotate(-2deg); }
+  to { transform: translateX(4%) rotate(2.5deg); }
+}
+
+.fish {
+  position: absolute;
+  width: 52px;
+  color: var(--slide-accent);
+  opacity: 0.55;
+  animation: swim 16s linear infinite;
+}
+
+.fish--1 { top: 14%; left: -8%; animation-duration: 15s; }
+.fish--2 { top: 32%; left: -14%; width: 38px; animation-delay: -6s; animation-duration: 19s; }
+.fish--3 { top: 58%; left: -10%; width: 60px; animation-delay: -11s; animation-duration: 22s; }
+.fish--4 { top: 72%; left: -16%; width: 32px; animation-delay: -3s; animation-duration: 17s; }
+.fish--5 { top: 44%; left: -20%; width: 44px; animation-delay: -14s; animation-duration: 25s; }
+
+@keyframes swim {
+  0% { transform: translateX(0) translateY(0) scaleX(1); }
+  24% { transform: translateX(34vw) translateY(-14px) scaleX(1); }
+  48% { transform: translateX(58vw) translateY(10px) scaleX(1); }
+  74% { transform: translateX(78vw) translateY(-8px) scaleX(1); }
+  90% { transform: translateX(96vw) translateY(6px) scaleX(1); opacity: 0.55; }
+  90.1% { transform: translateX(-10vw) translateY(6px) scaleX(-1); opacity: 0; }
+  96% { transform: translateX(-14vw) translateY(-4px) scaleX(-1); opacity: 0.55; }
+  100% { transform: translateX(0) translateY(0) scaleX(-1); opacity: 0.55; }
+}
+
+.bubble {
+  position: absolute;
+  bottom: -12%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--slide-accent);
+  opacity: 0.5;
+  animation: bubble-rise 8s ease-in infinite;
+}
+
+.bubble--1 { left: 12%; width: 12px; height: 12px; animation-delay: -1s; }
+.bubble--2 { left: 32%; animation-delay: -4s; }
+.bubble--3 { left: 68%; width: 10px; height: 10px; animation-delay: -6s; }
+
+@keyframes bubble-rise {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.5; }
+  100% { transform: translateY(-78vh); opacity: 0; }
+}
+
+/* 🥩 Hígado: volutas de aroma + corazoncitos */
+.steam {
+  position: absolute;
+  width: 46px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 70%);
+  filter: blur(6px);
+  opacity: 0.4;
+  animation: steam-rise 9s ease-in-out infinite;
+}
+
+.steam--1 { left: 18%; bottom: 6%; }
+.steam--2 { left: 48%; bottom: 2%; animation-delay: -3s; width: 34px; }
+.steam--3 { left: 74%; bottom: 8%; animation-delay: -6s; }
+
+@keyframes steam-rise {
+  0% { transform: translateY(0) scaleX(1); opacity: 0; }
+  25% { opacity: 0.45; }
+  100% { transform: translateY(-240px) scaleX(1.4); opacity: 0; }
+}
+
+/* 🐷 Orejas: huellitas flotantes · 🍗 Mollejas: plumitas · decoraciones comunes */
+.scene-deco {
+  position: absolute;
+  width: 44px;
+  color: var(--slide-accent);
+  opacity: 0.45;
+  animation: deco-float 12s ease-in-out infinite;
+}
+
+.deco-heart-1 { top: 16%; left: 8%; width: 34px; }
+.deco-heart-2 { bottom: 18%; right: 10%; width: 26px; animation-delay: -5s; }
+.deco-paw-1 { top: 14%; right: 8%; }
+.deco-paw-2 { bottom: 14%; left: 6%; width: 32px; animation-delay: -4s; }
+.deco-paw-3 { top: 48%; left: 44%; width: 24px; animation-delay: -8s; }
+.deco-feather-1 { top: 12%; left: 10%; animation-duration: 14s; }
+.deco-feather-2 { top: 40%; right: 8%; width: 32px; animation-delay: -4s; animation-duration: 17s; }
+.deco-feather-3 { bottom: 16%; left: 40%; width: 26px; animation-delay: -9s; animation-duration: 20s; }
+
+@keyframes deco-float {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-26px) rotate(10deg); }
+}
+
+/* 🐔 Patitas: migas crocantes rebotando */
+.crumb {
+  position: absolute;
+  width: 12px;
+  height: 9px;
+  border-radius: 40% 60% 55% 45%;
+  background: var(--slide-accent);
+  opacity: 0.55;
+  animation: crumb-hop 5.5s ease-in-out infinite;
+}
+
+.crumb--1 { bottom: 10%; left: 10%; }
+.crumb--2 { bottom: 18%; left: 26%; width: 9px; height: 7px; animation-delay: -1.4s; }
+.crumb--3 { bottom: 8%; left: 58%; width: 14px; height: 10px; animation-delay: -2.8s; }
+.crumb--4 { bottom: 22%; left: 76%; width: 8px; height: 6px; animation-delay: -0.7s; }
+.crumb--5 { bottom: 12%; left: 90%; animation-delay: -3.6s; }
+
+@keyframes crumb-hop {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  40% { transform: translateY(-30px) rotate(24deg); }
+  70% { transform: translateY(-8px) rotate(-12deg); }
+}
+
+/* Polaroid de la mascota (escena charales) */
+.slide__polaroid {
+  position: relative;
+  width: 100%;
+  max-width: 270px;
+  background: var(--white);
+  padding: 0.7rem 0.7rem 2.6rem;
+  border-radius: 14px;
+  box-shadow: 0 30px 60px -20px rgba(42, 26, 14, 0.45);
+  transform: rotate(-2.5deg);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.slide:hover .slide__polaroid {
+  transform: rotate(0deg) scale(1.03);
+}
+
+.slide__polaroid img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+/* La etiqueta .slide__media img añade hover/rotate: lo anulamos dentro del polaroid */
+.slide:hover .slide__polaroid img {
+  transform: none;
+}
+
+.slide__polaroid figcaption {
+  position: absolute;
+  bottom: 0.7rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--brown);
+}
+
+/* Acentos del slide pintados con el color del producto */
+.slide__protein {
+  background: var(--slide-accent-deep);
+  color: var(--slide-text-on-accent);
+}
+
+.slide .chip {
+  background: color-mix(in srgb, var(--slide-accent) 22%, var(--white));
+  color: var(--slide-accent-deep);
+}
+
+.slide .btn--primary {
+  background: var(--slide-accent-deep);
+  color: var(--slide-text-on-accent);
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--slide-accent-deep) 70%, transparent);
+}
+
+.slide .btn--primary:hover {
+  background: color-mix(in srgb, var(--slide-accent-deep) 82%, black);
+}
+
 /* Controles */
 .carousel__arrow {
   position: absolute;
@@ -657,25 +1009,7 @@ button {
 .carousel__arrow--prev { left: -1.4rem; }
 .carousel__arrow--next { right: -1.4rem; }
 
-.carousel__dots {
-  display: flex;
-  justify-content: center;
-  gap: 0.6rem;
-  margin-top: var(--space-3);
-}
-
-.carousel__dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.45);
-  transition: all 0.3s;
-}
-
-.carousel__dot.active {
-  width: 34px;
-  background: var(--white);
-}
+/* Los dots fueron sustituidos por .product-tabs */
 
 @media (max-width: 900px) {
   .slide {
@@ -684,242 +1018,12 @@ button {
     text-align: center;
   }
   .slide__media img { max-width: 330px; }
+  .slide__polaroid { margin-inline: auto; }
   .chips, .slide__actions { justify-content: center; }
   .carousel__arrow--prev { left: 0.3rem; }
   .carousel__arrow--next { right: 0.3rem; }
-}
-
-/* ═══════════ SECCIONES INFO POR PRODUCTO ═══════════ */
-
-.info-section {
-  padding-block: var(--space-6) 0;
-}
-
-.info-card {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: var(--space-4);
-  align-items: start;
-  background: var(--white);
-  border-radius: var(--radius-xl);
-  padding: clamp(1.5rem, 4vw, 3.5rem);
-  box-shadow: var(--shadow-card);
-  border-top: 8px solid var(--accent, var(--pink));
-}
-
-.info-card.flip .info-card__media { order: 2; }
-
-.info-card__media {
-  position: sticky;
-  top: 100px;
-}
-
-.info-card__media img {
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-}
-
-.info-card__title {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(1.6rem, 3vw, 2.3rem);
-  line-height: 1.1;
-}
-
-.info-card__ingredients {
-  font-size: 0.92rem;
-  color: var(--brown-soft);
-  margin-block: 0.6rem var(--space-2);
-  padding-left: 0.9rem;
-  border-left: 3px solid var(--accent, var(--pink));
-}
-
-.benefits {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.6rem;
-  margin-block: var(--space-2);
-}
-
-.benefit {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--cream);
-  border-radius: 0.9rem;
-  padding: 0.6rem 0.8rem;
-  font-weight: 800;
-  font-size: 0.85rem;
-  color: var(--brown);
-}
-
-.benefit::before {
-  content: '🐾';
-  font-size: 0.9rem;
-}
-
-/* Tablas y paneles */
-.panel {
-  background: var(--cream);
-  border-radius: var(--radius-lg);
-  padding: var(--space-2) var(--space-3);
-  margin-block: var(--space-2);
-}
-
-.panel h4 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05rem;
-  margin-bottom: 0.7rem;
-}
-
-.nutrition-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.92rem;
-}
-
-.nutrition-table td {
-  padding: 0.45rem 0;
-  border-bottom: 1px dashed var(--sand);
-}
-
-.nutrition-table td:last-child {
-  text-align: right;
-  font-weight: 900;
-  color: var(--pink);
-}
-
-.nutrition-table tr:last-child td {
-  border-bottom: none;
-}
-
-.portion-row {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding-block: 0.45rem;
-  border-bottom: 1px dashed var(--sand);
-  font-size: 0.92rem;
-}
-
-.portion-row:last-child { border-bottom: none; }
-.portion-row__icon { font-size: 1.15rem; }
-.portion-row__size { flex: 1; color: var(--brown); font-weight: 600; }
-.portion-row__amount { font-weight: 900; text-align: right; }
-
-/* Calculadora */
-.calculator {
-  background: var(--brown-dark);
-  color: var(--cream);
-  border-radius: var(--radius-lg);
-  padding: var(--space-3);
-  margin-block: var(--space-2);
-}
-
-.calculator__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.05rem;
-  margin-bottom: 0.8rem;
-}
-
-.calculator__controls {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-}
-
-.calculator__input-group {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
-  padding: 0.3rem 0.4rem 0.3rem 1rem;
-  gap: 0.6rem;
-}
-
-.calculator__input-group input {
-  width: 76px;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--white);
-  font-family: var(--font-body);
-  font-size: 1.3rem;
-  font-weight: 900;
-  text-align: center;
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
-.calculator__input-group input::-webkit-outer-spin-button,
-.calculator__input-group input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.calculator__input-group span {
-  font-weight: 800;
-  font-size: 0.8rem;
-  color: var(--pink-soft);
-}
-
-.calculator__result {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  margin-top: 0.9rem;
-}
-
-.calculator__result-value {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 1.7rem;
-  color: var(--pink-soft);
-  transition: transform 0.15s;
-}
-
-.calculator__result-label {
-  font-size: 0.85rem;
-  opacity: 0.8;
-}
-
-/* Nota y conservación */
-.info-note {
-  background: var(--pink-soft);
-  border-radius: var(--radius-lg);
-  padding: 0.9rem var(--space-2);
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--pink-deep);
-  margin-block: var(--space-2);
-}
-
-.info-conservation {
-  display: flex;
-  gap: 0.7rem;
-  align-items: flex-start;
-  font-size: 0.82rem;
-  color: var(--brown-soft);
-  margin-top: var(--space-2);
-}
-
-.info-conservation__icon { font-size: 1.2rem; }
-
-@media (max-width: 900px) {
-  .info-card {
-    grid-template-columns: 1fr;
-  }
-  .info-card.flip .info-card__media { order: 0; }
-  .info-card__media {
-    position: static;
-    max-width: 420px;
-    margin-inline: auto;
-  }
-}
-
-/* ═══════════ CTA FINAL ═══════════ */
+  .product-tab { font-size: 0.82rem; padding: 0.45rem 0.9rem; }
+}/* ═══════════ CTA FINAL ═══════════ */
 
 .final-cta {
   margin: var(--space-6) auto;
