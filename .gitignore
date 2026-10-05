@@ -4,3 +4,15 @@ node_modules/
 *:Zone.Identifier
 .env
 .env.*
+
+# Artefactos generados por agentes
+.forensics/
+PLAN.json
+
+# Material original / descargas de referencia (se conservan en disco, no se publican)
+landing_dehydrated_treats/cha- rales/
+landing_dehydrated_treats/cha- rales.zip
+landing_dehydrated_treats/Sugarmelon _ Playful landing template with 3D fruit.html
+landing_dehydrated_treats/Sugarmelon _ Playful landing template with 3D fruit_files/
+landing_dehydrated_treats/Etiquetas Nutrimentales Compactas.pdf
+landing_dehydrated_treats/Gemini_Generated_Image_*.jfif
