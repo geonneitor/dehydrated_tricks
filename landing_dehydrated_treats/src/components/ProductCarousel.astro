@@ -1,240 +1,489 @@
 ---
-import { products, waLink } from '../data/products';
-import charalesMascot from '../assets/scenes/charales-mascot.png';
+import { products } from '../data/products';
+import card1 from '../assets/products/charales.png';
+import card2 from '../assets/products/higados.png';
+import card3 from '../assets/products/orejas.png';
+import card4 from '../assets/products/mollejas.png';
+import card5 from '../assets/products/patitas.png';
+
+const cardImages = [card1, card2, card3, card4, card5];
 ---
 
-<section class="carousel-section" id="productos" data-theme-section>
-  <!-- Fondos dinámicos: una capa gradiente por producto -->
-  <div class="carousel-bg" aria-hidden="true">
-    {products.map((p, i) => (
-      <div
-        class:list={['carousel-bg__layer', { active: i === 0 }]}
-        data-bg-index={i}
-        style={`background: ${p.gradient};`}
-      />
-    ))}
-  </div>
-
+<section class="sugarmelon-store" id="productos">
   <div class="container">
-    <header class="carousel-section__head">
-      <span class="eyebrow">nuestros premios</span>
-      <h2 class="display-2">Cada uno, un solo ingrediente</h2>
-      <p>Desliza y descubre el premio perfecto para tu peludo.</p>
+    <header class="store-header">
+      <div class="kicker">
+        <span class="kicker-star">✦</span> La tiendita
+      </div>
+      <h2 class="store-title t-title">
+        Premios frescos, <span class="accent-script">ofertas jugosas.</span>
+      </h2>
+      <p class="store-desc">
+        Nuestros premios de un solo ingrediente. Toca una tarjeta para ver la información nutrimental.
+      </p>
     </header>
 
-    <!-- Pestañas protagónicas: emoji + nombre, píldora del color del producto -->
-    <div class="product-tabs" role="tablist" aria-label="Elegir producto" data-tabs>
+    <div class="products-row">
       {products.map((p, i) => (
-        <button
-          class:list={['product-tab', { active: i === 0 }]}
-          role="tab"
-          aria-selected={i === 0 ? 'true' : 'false'}
-          data-tab-index={i}
-          style={`--tab-accent: ${p.accentDeep}; --tab-accent-soft: ${p.accent};`}
-        >
-          <span class="product-tab__emoji" aria-hidden="true">{p.emoji}</span>
-          <span class="product-tab__name">{p.shortName}</span>
+        <button class="product-card-btn" data-product={JSON.stringify(p)}>
+          <img
+            src={cardImages[i].src}
+            alt={`Tarjeta de ${p.name}`}
+            class="product-card__img"
+          />
         </button>
       ))}
     </div>
-
-    <div class="carousel" data-carousel>
-      <div class="carousel__viewport">
-        <div class="carousel__track" data-carousel-track>
-          {products.map((p, i) => (
-            <article class="slide" data-slide data-scene={p.scene} style={`--slide-accent: ${p.accent}; --slide-accent-deep: ${p.accentDeep}; --slide-text-on-accent: ${p.textOnAccent};`}>
-              <!-- Escena animada detrás del contenido (CSS puro) -->
-              <div class="scene" aria-hidden="true">
-                {p.scene === 'charales' && (
-                  <>
-                    <span class="wave wave--1"></span>
-                    <span class="wave wave--2"></span>
-                    <svg class="fish fish--1" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
-                    <svg class="fish fish--2" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
-                    <svg class="fish fish--3" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
-                    <svg class="fish fish--4" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
-                    <svg class="fish fish--5" viewBox="0 0 64 40"><use href="#fish-shape" /></svg>
-                    <span class="bubble bubble--1"></span>
-                    <span class="bubble bubble--2"></span>
-                    <span class="bubble bubble--3"></span>
-                  </>
-                )}
-                {p.scene === 'higados' && (
-                  <>
-                    <span class="steam steam--1"></span>
-                    <span class="steam steam--2"></span>
-                    <span class="steam steam--3"></span>
-                    <svg class="scene-deco deco-heart-1" viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/></svg>
-                    <svg class="scene-deco deco-heart-2" viewBox="0 0 24 24"><path d="M12 21s-8-5.5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.5-8 11-8 11z"/></svg>
-                  </>
-                )}
-                {p.scene === 'orejas' && (
-                  <>
-                    <svg class="scene-deco deco-paw-1" viewBox="0 0 24 24"><path d="M12 13c-2.5 0-5 2-5 4.5 0 1.5 1.2 2.5 2.5 2.5 1 0 1.7-.5 2.5-.5s1.5.5 2.5.5c1.3 0 2.5-1 2.5-2.5C17 15 14.5 13 12 13zM6.5 8.5A1.8 1.8 0 1 0 6.5 4.9a1.8 1.8 0 0 0 0 3.6zm4-1A1.8 1.8 0 1 0 10.5 3.9 1.8 1.8 0 0 0 10.5 7.5zm3 0a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zm4 1a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6z"/></svg>
-                    <svg class="scene-deco deco-paw-2" viewBox="0 0 24 24"><path d="M12 13c-2.5 0-5 2-5 4.5 0 1.5 1.2 2.5 2.5 2.5 1 0 1.7-.5 2.5-.5s1.5.5 2.5.5c1.3 0 2.5-1 2.5-2.5C17 15 14.5 13 12 13zM6.5 8.5A1.8 1.8 0 1 0 6.5 4.9a1.8 1.8 0 0 0 0 3.6zm4-1A1.8 1.8 0 1 0 10.5 3.9 1.8 1.8 0 0 0 10.5 7.5zm3 0a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zm4 1a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6z"/></svg>
-                    <svg class="scene-deco deco-paw-3" viewBox="0 0 24 24"><path d="M12 13c-2.5 0-5 2-5 4.5 0 1.5 1.2 2.5 2.5 2.5 1 0 1.7-.5 2.5-.5s1.5.5 2.5.5c1.3 0 2.5-1 2.5-2.5C17 15 14.5 13 12 13zM6.5 8.5A1.8 1.8 0 1 0 6.5 4.9a1.8 1.8 0 0 0 0 3.6zm4-1A1.8 1.8 0 1 0 10.5 3.9 1.8 1.8 0 0 0 10.5 7.5zm3 0a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zm4 1a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6z"/></svg>
-                  </>
-                )}
-                {p.scene === 'mollejas' && (
-                  <>
-                    <svg class="scene-deco deco-feather-1" viewBox="0 0 24 24"><path d="M20 4c-6 0-12 4-14 10l-2 6 1 1 6-2c6-2 10-8 10-14v-1zm-7 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
-                    <svg class="scene-deco deco-feather-2" viewBox="0 0 24 24"><path d="M20 4c-6 0-12 4-14 10l-2 6 1 1 6-2c6-2 10-8 10-14v-1zm-7 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
-                    <svg class="scene-deco deco-feather-3" viewBox="0 0 24 24"><path d="M20 4c-6 0-12 4-14 10l-2 6 1 1 6-2c6-2 10-8 10-14v-1zm-7 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
-                  </>
-                )}
-                {p.scene === 'patitas' && (
-                  <>
-                    <span class="crumb crumb--1"></span>
-                    <span class="crumb crumb--2"></span>
-                    <span class="crumb crumb--3"></span>
-                    <span class="crumb crumb--4"></span>
-                    <span class="crumb crumb--5"></span>
-                  </>
-                )}
-              </div>
-
-              <div class="slide__media">
-                {p.scene === 'charales' && (
-                  <figure class="slide__polaroid">
-                    <img
-                      src={charalesMascot.src}
-                      alt="Mascota de Guaw & Miaw disfrutando charales deshidratados"
-                      loading={i === 0 ? 'eager' : 'lazy'}
-                      width={charalesMascot.width}
-                      height={charalesMascot.height}
-                    />
-                    <figcaption>¡Guau y Miaw aprobados! 🐟</figcaption>
-                  </figure>
-                )}
-                {p.scene !== 'charales' && (
-                  <img src={p.label.src} alt={p.name} loading={i === 0 ? 'eager' : 'lazy'} width={p.label.width} height={p.label.height} />
-                )}
-                <span class="slide__protein">{p.proteinLabel}</span>
-              </div>
-              <div class="slide__info">
-                <span class="slide__tagline">{p.tagline}</span>
-                <h3>{p.name}</h3>
-                <p class="slide__desc">{p.description}</p>
-                <div class="chips">
-                  {p.benefits.map((b) => <span class="chip">{b}</span>)}
-                </div>
-                <div class="slide__actions">
-                  <a
-                    href={waLink(p.waMessage)}
-                    class="btn btn--primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Pedir por WhatsApp
-                  </a>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <button class="carousel__arrow carousel__arrow--prev" data-prev aria-label="Producto anterior">←</button>
-      <button class="carousel__arrow carousel__arrow--next" data-next aria-label="Producto siguiente">→</button>
-    </div>
   </div>
 
-  <!-- Símbolos SVG compartidos por las escenas -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
-      <g id="fish-shape">
-        <path d="M4 20 C14 8, 40 6, 52 18 L60 12 L56 22 L60 30 L52 26 C40 36, 14 32, 4 20 Z" fill="currentColor" />
-        <circle cx="14" cy="18" r="2.2" fill="rgba(255,255,255,0.85)" />
-        <circle cx="14.8" cy="18.4" r="1" fill="rgba(14,58,74,0.9)" />
-      </g>
-    </defs>
-  </svg>
+  <dialog id="nutrition-modal" class="nutrition-modal">
+    <div class="modal-container">
+      <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      <div class="modal-body" id="modal-body">
+        <!-- Contenido inyectado por JS -->
+      </div>
+    </div>
+  </dialog>
 </section>
 
 <script>
-  const section = document.querySelector('[data-theme-section]');
-  const carousel = document.querySelector('[data-carousel]');
+  const modal = document.getElementById('nutrition-modal') as HTMLDialogElement;
+  const closeBtn = modal?.querySelector('.modal-close');
+  const modalBody = document.getElementById('modal-body');
+  
+  const buttons = document.querySelectorAll('.product-card-btn');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const product = JSON.parse((btn as HTMLElement).dataset.product || '{}');
+      if (modalBody) {
+        modalBody.innerHTML = `
+          <div class="modal-header-hero" style="background: linear-gradient(135deg, ${product.accent} 0%, ${product.accentDeep} 100%);">
+            <div class="modal-emoji-wrapper" style="border: 3px solid ${product.accent};">
+              <span class="modal-emoji-dot" style="background: ${product.accentDeep}; width: 28px; height: 28px; border-radius: 50%; display: block;"></span>
+            </div>
+            </div>
+            <h3 class="modal-title" style="color: ${product.textOnAccent || '#fff'};">${product.name}</h3>
+          </div>
+          
+          <div class="modal-scroll-content">
+            <p class="modal-desc">${product.description}</p>
+            
+            <div class="modal-section">
+              <h4 class="modal-subtitle" style="color: ${product.accentDeep};">
+                <svg viewBox="0 0 20 20" fill="none" style="width:20px;height:20px;flex-shrink:0;"><rect x="1" y="4" width="18" height="12" rx="2" stroke="${product.accentDeep}" stroke-width="1.5" fill="${product.accent}" opacity="0.3"/><path d="M5 9h4M5 12h6M13 9h2" stroke="${product.accentDeep}" stroke-width="1.3" stroke-linecap="round"/></svg>
+                Análisis Garantizado
+              </h4>
+              <div class="nutrition-grid">
+                ${product.nutrition.map((n: any) => `
+                  <div class="nutrition-card" style="border-bottom: 3px solid ${product.accent}40;">
+                    <span class="n-value" style="color: ${product.accentDeep}">${n.value}</span>
+                    <span class="n-label">${n.label.replace(' (mín.)','').replace(' (máx.)','')}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div class="modal-section">
+              <h4 class="modal-subtitle" style="color: ${product.accentDeep};">
+                <svg viewBox="0 0 20 20" fill="none" style="width:20px;height:20px;flex-shrink:0;"><path d="M10 3c-2 0-3 1.5-3 3 0 2 1.5 4 3 6 1.5-2 3-4 3-6 0-1.5-1-3-3-3z" fill="${product.accent}" opacity="0.5"/><path d="M3 10c0 4 3 7 7 7s7-3 7-7" stroke="${product.accentDeep}" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M7 14c1 1 2 1.5 3 1.5s2-.5 3-1.5" stroke="${product.accentDeep}" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg>
+                Ingredientes
+              </h4>
+              <p class="modal-ingredientes" style="background-color: ${product.accent}15; border-left-color: ${product.accentDeep};">
+                ${product.ingredients}
+              </p>
+            </div>
 
-  if (section && carousel) {
-    const track = carousel.querySelector<HTMLElement>('[data-carousel-track]')!;
-    const slides = [...carousel.querySelectorAll<HTMLElement>('[data-slide]')];
-    const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-tab-index]')];
-    const bgLayers = [...section.querySelectorAll<HTMLElement>('[data-bg-index]')];
-    const prev = carousel.querySelector<HTMLButtonElement>('[data-prev]')!;
-    const next = carousel.querySelector<HTMLButtonElement>('[data-next]')!;
+            <div class="modal-section">
+              <h4 class="modal-subtitle" style="color: ${product.accentDeep};">
+                <svg viewBox="0 0 20 20" fill="none" style="width:20px;height:20px;flex-shrink:0;"><circle cx="10" cy="10" r="8" stroke="${product.accentDeep}" stroke-width="1.5" fill="${product.accent}" opacity="0.2"/><path d="M6 10h8M10 6v8" stroke="${product.accentDeep}" stroke-width="1.5" stroke-linecap="round"/></svg>
+                ${product.portionsTitle}
+              </h4>
+              <div class="portions-grid">
+                ${product.portions.map((p: any) => `
+                  <div class="portion-card" style="background-color: ${product.accent}10;">
+                    <div class="portion-icon" style="border: 2px solid ${product.accent};">
+                      <svg viewBox="0 0 24 24" fill="none" style="width:22px;height:22px;"><path d="M12 4C8 4 5 7 5 11c0 2.8 1.5 5.2 4 6.5L10 22h4l1-4.5c2.5-1.3 4-3.7 4-6.5 0-4-3-7-7-7z" fill="${product.accentDeep}" opacity="0.25"/><circle cx="9.5" cy="10.5" r="1.2" fill="${product.accentDeep}"/><circle cx="14.5" cy="10.5" r="1.2" fill="${product.accentDeep}"/></svg>
+                    </div>
+                    <div class="portion-details">
+                      <strong style="color: ${product.accentDeep}">${p.petSize}</strong>
+                      <span>${p.amount}</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    let index = 0;
-    let autoTimer: number | undefined;
-
-    function applyTheme(i: number) {
-      const id = slides[i]?.dataset.scene;
-      if (!id) return;
-      // Pinta navbar/marquee/acento global con el producto activo.
-      document.body.dataset.theme = id;
-    }
-
-    function goTo(i: number) {
-      index = (i + slides.length) % slides.length;
-      track.style.transform = `translateX(-${index * 100}%)`;
-
-      slides.forEach((s, si) => s.classList.toggle('active', si === index));
-      tabs.forEach((t, ti) => {
-        t.classList.toggle('active', ti === index);
-        t.setAttribute('aria-selected', ti === index ? 'true' : 'false');
-      });
-      bgLayers.forEach((l, li) => l.classList.toggle('active', li === index));
-      applyTheme(index);
-    }
-
-    function restartAuto() {
-      if (reducedMotion) return;
-      if (autoTimer) clearInterval(autoTimer);
-      // Auto-avance suave después de 7s sin interacción
-      autoTimer = window.setInterval(() => goTo(index + 1), 7000);
-    }
-
-    function stopAuto() {
-      if (autoTimer) clearInterval(autoTimer);
-      autoTimer = undefined;
-    }
-
-    prev.addEventListener('click', () => { goTo(index - 1); restartAuto(); });
-    next.addEventListener('click', () => { goTo(index + 1); restartAuto(); });
-    tabs.forEach((tab, ti) => tab.addEventListener('click', () => { goTo(ti); restartAuto(); }));
-
-    // Swipe táctil
-    let startX = 0;
-    carousel.addEventListener('pointerdown', (e) => { startX = (e as PointerEvent).clientX; });
-    carousel.addEventListener('pointerup', (e) => {
-      const dx = (e as PointerEvent).clientX - startX;
-      if (Math.abs(dx) > 50) {
-        goTo(dx < 0 ? index + 1 : index - 1);
-        restartAuto();
+          <div class="modal-actions">
+            <a href="https://wa.me/525528462102?text=${encodeURIComponent(product.waMessage)}" class="btn-premium" style="background: ${product.accentDeep}; color: ${product.textOnAccent || '#fff'}; box-shadow: 0 10px 20px -5px ${product.accentDeep}80;" target="_blank" rel="noopener noreferrer">
+              ¡Quiero Pedir!
+            </a>
+          </div>
+        `;
       }
+      modal?.showModal();
     });
+  });
 
-    // Teclado ← → sobre el carrusel
-    carousel.addEventListener('keydown', (e) => {
-      if ((e as KeyboardEvent).key === 'ArrowLeft') { goTo(index - 1); restartAuto(); }
-      if ((e as KeyboardEvent).key === 'ArrowRight') { goTo(index + 1); restartAuto(); }
-    });
+  closeBtn?.addEventListener('click', () => {
+    modal?.close();
+  });
 
-    // Pausa auto-avance + animaciones cuando la sección no está en viewport
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        section.classList.toggle('scene-paused', !entry.isIntersecting);
-        // El tinte global (marquee/navbar) solo vive mientras el carrusel se ve
-        document.body.classList.toggle('theme-live', entry.isIntersecting);
-        if (entry.isIntersecting) restartAuto();
-        else stopAuto();
-      },
-      { threshold: 0.25 }
-    );
-    observer.observe(section);
-
-    restartAuto();
-    goTo(0);
-  }
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.close();
+    }
+  });
 </script>
+
+<style>
+  .sugarmelon-store {
+    padding-block: var(--space-6);
+    background-color: var(--cream);
+    background-image: radial-gradient(rgba(50, 16, 28, 0.05) 2px, transparent 0);
+    background-size: 30px 30px;
+  }
+
+  .store-header {
+    margin-bottom: var(--space-5);
+    text-align: center;
+  }
+
+  .store-title {
+    color: var(--brown-dark);
+    margin: 0 0 12px 0;
+  }
+
+  .store-desc {
+    color: var(--brown-soft);
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    font-weight: 600;
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+
+  /* Grid para que quepan las 5 tarjetas en una fila */
+  .products-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Tarjeta tipo ticket: marco blanco + perforación + cenefa dentada */
+  .product-card-btn {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    background: var(--white);
+    border: none;
+    padding: 9px 9px 22px;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+    border-radius: 14px 14px 5px 5px;
+    filter: drop-shadow(0 12px 22px rgba(50, 16, 28, 0.12));
+  }
+
+  /* Línea de perforación del talón desprendible */
+  .product-card-btn::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 13px;
+    border-top: 2px dashed rgba(50, 16, 28, 0.18);
+  }
+
+  /* Cenefa dentada inferior (mismo patrón que el ticket de la calculadora) */
+  .product-card-btn::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: conic-gradient(from 135deg at 50% 0%, var(--white) 90deg, transparent 0) 0 0 / 16px 8px repeat-x;
+  }
+
+  .product-card-btn:hover {
+    transform: translateY(-10px) scale(1.05);
+    filter: drop-shadow(0 22px 34px rgba(50, 16, 28, 0.18));
+  }
+
+  .product-card__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }
+
+  @media (max-width: 1024px) {
+    .products-row {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .product-card-btn {
+      flex: 0 1 calc(33.333% - 1rem);
+      min-width: 200px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .product-card-btn {
+      flex: 0 1 calc(50% - 1rem);
+      min-width: 160px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-card-btn {
+      flex: 0 1 100%;
+      max-width: 300px;
+    }
+  }
+
+  /* PREMIUM MODAL STYLES */
+  .nutrition-modal {
+    border: none;
+    border-radius: 24px;
+    box-shadow: 0 40px 100px rgba(50, 16, 28, 0.25);
+    padding: 0;
+    max-width: 550px;
+    width: 92%;
+    background: var(--white, #ffffff);
+    color: var(--brown-dark, #4A2B29);
+    overflow: hidden; /* Para el header de color */
+    margin: auto; /* Truco de HTML5 <dialog> para centrado absoluto */
+  }
+
+  /* Animación suave de entrada al abrir modal */
+  .nutrition-modal[open] {
+    animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes modalPop {
+    0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .nutrition-modal::backdrop {
+    background: rgba(26, 12, 16, 0.65);
+    backdrop-filter: blur(8px);
+    animation: fadeBackdrop 0.4s ease forwards;
+  }
+  @keyframes fadeBackdrop {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; /* Para que el modal no sea más alto que la pantalla */
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: background 0.2s ease, transform 0.2s ease;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+  }
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1) rotate(90deg);
+  }
+
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-header-hero {
+    padding: 2.5rem 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .modal-emoji-wrapper {
+    background: white;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 1rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+
+  .modal-title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-family: var(--font-display, inherit);
+    line-height: 1.1;
+  }
+
+  .modal-scroll-content {
+    padding: 1.5rem 2rem;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .modal-desc {
+    margin-bottom: 2rem;
+    color: var(--brown-soft, #7A5B59);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .modal-section {
+    margin-bottom: 2rem;
+  }
+
+  .modal-subtitle {
+    margin: 0 0 1rem 0;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body, inherit);
+    font-weight: 800;
+  }
+
+  .subtitle-icon {
+    font-size: 1.3rem;
+  }
+
+  /* Grid de Nutrición */
+  .nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.8rem;
+  }
+  
+  .nutrition-card {
+    background: #fdfbf8;
+    border-radius: 12px;
+    padding: 1rem 0.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .n-value {
+    font-size: 1.35rem;
+    font-weight: 900;
+  }
+
+  .n-label {
+    font-size: 0.75rem;
+    color: var(--brown-soft);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Ingredientes */
+  .modal-ingredientes {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border-left: 4px solid;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  /* Grid de Porciones */
+  .portions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .portion-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .portion-icon {
+    font-size: 1.8rem;
+    background: white;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+  }
+
+  .portion-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .portion-details strong {
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  .portion-details span {
+    font-size: 0.95rem;
+    color: var(--brown-soft);
+    font-weight: 500;
+  }
+
+  /* CTA Button */
+  .modal-actions {
+    padding: 1rem 2rem 2rem;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, white 20%);
+    text-align: center;
+    position: sticky;
+    bottom: 0;
+  }
+
+  .btn-premium {
+    display: inline-block;
+    width: 100%;
+    padding: 1.1rem 2rem;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 1.15rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .btn-premium:hover {
+    transform: translateY(-3px);
+  }
+</style>

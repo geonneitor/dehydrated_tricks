@@ -1,0 +1,229 @@
+---
+// Recommendations.astro
+// Tips en grid bento compacto: las 5 tarjetas llenan el ancho del contenedor.
+// Cada tarjeta usa un acento del catálogo de productos para mantener la identidad.
+const tips = [
+  {
+    icon: '💡',
+    tag: 'Tip nutricional',
+    text: 'Los premios deshidratados conservan los nutrientes intactos: un solo premio equivale a una porción de carne fresca más grande.',
+    accent: '#FF3D5E',
+  },
+  {
+    icon: '🥩',
+    tag: 'Entrenamiento',
+    text: 'Para perros de razas pequeñas, parte las orejas o mollejas en trozos más chicos. Son excelentes para entrenamiento.',
+    accent: '#8C2332',
+  },
+  {
+    icon: '💧',
+    tag: 'Hidratación',
+    text: 'Mantén siempre agua fresca a su disposición cuando le des premios deshidratados. ¡Les dará mucha sed!',
+    accent: '#1B6E8C',
+  },
+  {
+    icon: '📦',
+    tag: 'Almacenaje',
+    text: 'Conserva los empaques de Despensa bien cerrados en un lugar fresco y seco. No necesitan refrigeración.',
+    accent: '#C98A2D',
+  },
+  {
+    icon: '🐈',
+    tag: 'Favorito felino',
+    text: 'A los gatos les encanta el olor fuerte de los charales: el snack perfecto por su alto contenido de Omega.',
+    accent: '#C96F8E',
+  },
+];
+---
+
+<section class="sugarmelon-recommendations" id="tips">
+  <div class="container">
+    <header class="recommendations-head">
+      <span class="kicker"><span class="kicker-star">✦</span> Info & Tips</span>
+      <h2 class="section-title t-title">Tips <span class="accent-script">perronas</span></h2>
+    </header>
+
+    <div class="tips-grid" data-tips-grid>
+      {tips.map((tip) => (
+        <article class="tip-card" style={`--tip: ${tip.accent};`}>
+          <div class="tip-top">
+            <span class="tip-icon" aria-hidden="true">{tip.icon}</span>
+            <span class="tip-tag">{tip.tag}</span>
+          </div>
+          <p class="tip-text">{tip.text}</p>
+          <span class="tip-paw" aria-hidden="true">🐾</span>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sugarmelon-recommendations {
+    position: relative;
+    padding-block: var(--space-5);
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--cream) 0%, #faeee0 55%, #f2e2d0 100%);
+  }
+
+  .recommendations-head {
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+
+  .section-title {
+    color: var(--brown-dark);
+    margin: 0;
+  }
+
+  /* ── Grid bento: 4+2 arriba, 2+2+2 abajo ── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.1rem;
+  }
+
+  .tip-card:nth-child(1) { grid-column: span 4; }
+  .tip-card:nth-child(2) { grid-column: span 2; }
+  .tip-card:nth-child(3) { grid-column: span 2; }
+  .tip-card:nth-child(4) { grid-column: span 2; }
+  .tip-card:nth-child(5) { grid-column: span 2; }
+
+  @media (max-width: 1023px) {
+    .tips-grid { grid-template-columns: repeat(2, 1fr); }
+    .tip-card:nth-child(1) { grid-column: span 2; }
+    .tip-card:nth-child(n + 2) { grid-column: span 1; }
+  }
+
+  @media (max-width: 600px) {
+    .tips-grid { grid-template-columns: 1fr; }
+    .tip-card:nth-child(n) { grid-column: span 1; }
+  }
+
+  /* ── Tarjeta ── */
+  .tip-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    background: var(--white);
+    border: 1px solid rgba(var(--ink-rgb), 0.07);
+    border-radius: var(--radius-lg);
+    padding: 1.35rem 1.5rem;
+    box-shadow: 0 10px 30px -14px rgba(var(--ink-rgb), 0.18);
+    transition:
+      transform var(--dur-fast) var(--ease-bounce),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  .tip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* La tarjeta destacada lleva un lavado de su color */
+  .tip-card:nth-child(1) {
+    background: linear-gradient(135deg, var(--white) 55%, color-mix(in srgb, var(--tip) 9%, var(--white)) 100%);
+  }
+
+  .tip-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .tip-icon {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--tip) 12%, var(--white));
+    transition: transform var(--dur-fast) var(--ease-bounce);
+  }
+
+  .tip-card:hover .tip-icon {
+    transform: rotate(-8deg) scale(1.1);
+  }
+
+  .tip-tag {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: color-mix(in srgb, var(--tip) 78%, black);
+    background: color-mix(in srgb, var(--tip) 10%, var(--white));
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .tip-text {
+    color: var(--brown-dark);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  /* La tarjeta destacada lee más grande: jerarquía sin desperdiciar espacio */
+  .tip-card:nth-child(1) .tip-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .tip-paw {
+    position: absolute;
+    right: -0.4rem;
+    bottom: -1.1rem;
+    font-size: 4.2rem;
+    line-height: 1;
+    opacity: 0.06;
+    transform: rotate(-18deg);
+    pointer-events: none;
+  }
+
+  /* ── Reveal escalonado al hacer scroll (solo si hay JS) ── */
+  .tips-armed .tip-card {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.55s var(--ease-out),
+      transform 0.55s var(--ease-out);
+  }
+  .tips-armed .tip-card:nth-child(2) { transition-delay: 0.07s; }
+  .tips-armed .tip-card:nth-child(3) { transition-delay: 0.14s; }
+  .tips-armed .tip-card:nth-child(4) { transition-delay: 0.21s; }
+  .tips-armed .tip-card:nth-child(5) { transition-delay: 0.28s; }
+  .tips-armed .tip-card.in-view {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+
+<script>
+  // Reveal escalonado: si no hay JS o no hay soporte, las tarjetas se ven normal
+  const grid = document.querySelector('[data-tips-grid]');
+
+  if (grid && 'IntersectionObserver' in window) {
+    grid.classList.add('tips-armed');
+    const cards = grid.querySelectorAll('.tip-card');
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    cards.forEach((card) => io.observe(card));
+  }
+</script>

@@ -18,3 +18,11 @@ import logoMain from '../assets/logos/logo-main.png';
     </a>
   </div>
 </nav>
+
+<script>
+  // Fondo del navbar al hacer scroll (legibilidad sobre cualquier sección)
+  const navbar = document.getElementById('navbar');
+  const onScroll = () => navbar?.classList.toggle('scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

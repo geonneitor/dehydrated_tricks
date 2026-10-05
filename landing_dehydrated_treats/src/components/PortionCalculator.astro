@@ -1,0 +1,1085 @@
+---
+import { SITE, products } from '../data/products';
+
+const safeProducts = products.map((p) => ({
+  id: p.id,
+  name: p.shortName,
+  emoji: p.emoji,
+  accentDeep: p.accentDeep,
+  unit: p.calc.unit,
+  // Infinity no sobrevive a JSON: el último rango se marca con 999
+  ranges: p.calc.ranges.map((r) => ({ maxKg: r.maxKg === Infinity ? 999 : r.maxKg, result: r.result })),
+}));
+
+const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
+---
+
+<section class="sugarmelon-calculator-section" id="calculadora">
+  <div class="container">
+    <header class="calc-head">
+      <span class="kicker"><span class="kicker-star">✦</span> Calculadora</span>
+      <h2 class="t-title">Su porción perfecta, <span class="accent-script">calculada</span></h2>
+      <p class="calc-desc">Responde 3 pasitos y te decimos exactamente cuánto premio darle al día.</p>
+    </header>
+
+    <div class="calculator-card" data-calculator-card>
+      <!-- ═══ Panel izquierdo: los pasos ═══ -->
+      <div class="calc-form">
+        <!-- Paso 1 · Mascota -->
+        <div class="step" data-step="1">
+          <div class="step-head">
+            <span class="step-num" data-step-num>1</span>
+            <span class="step-title">¿Quién es el afortunado?</span>
+          </div>
+          <div class="step-body">
+            <div class="pet-cards">
+              <label class="pet-card pet-card--dog">
+                <input type="radio" name="pet_type" value="dog" />
+                <span class="pet-avatar" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="pet-icon">
+                    <circle cx="24" cy="24" r="22" fill="currentColor" opacity="0.12"/>
+                    <path d="M14 14c-2-4-6-3-7 0s0 7 3 8l4-8zm20 0c2-4 6-3 7 0s0 7-3 8l-4-8z" fill="currentColor" opacity="0.5"/>
+                    <circle cx="24" cy="26" r="12" fill="currentColor" opacity="0.22"/>
+                    <circle cx="20" cy="23" r="2.2" fill="currentColor"/>
+                    <circle cx="28" cy="23" r="2.2" fill="currentColor"/>
+                    <ellipse cx="24" cy="28" rx="3.5" ry="2.5" fill="currentColor" opacity="0.55"/>
+                    <path d="M21 30.5c0 0 1.5 2.5 3 2.5s3-2.5 3-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                  </svg>
+                </span>
+                <span class="pet-info">
+                  <span class="pet-name">Perro</span>
+                  <span class="pet-sub">Todos los premios</span>
+                </span>
+                <span class="pet-check" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="none" class="check-icon"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </label>
+              <label class="pet-card pet-card--cat">
+                <input type="radio" name="pet_type" value="cat" />
+                <span class="pet-avatar" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="pet-icon">
+                    <circle cx="24" cy="24" r="22" fill="currentColor" opacity="0.12"/>
+                    <path d="M12 12l2 12h-2L8 10l4 2zm24 0l-2 12h2l4-14-4 2z" fill="currentColor" opacity="0.45"/>
+                    <circle cx="24" cy="27" r="11" fill="currentColor" opacity="0.22"/>
+                    <circle cx="20" cy="24" r="2" fill="currentColor"/>
+                    <circle cx="28" cy="24" r="2" fill="currentColor"/>
+                    <ellipse cx="24" cy="28.5" rx="2" ry="1.5" fill="currentColor" opacity="0.5"/>
+                    <path d="M18 30c0 0 .5 1 2 1M30 30c0 0-.5 1-2 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+                    <line x1="14" y1="27" x2="10" y2="26" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+                    <line x1="14" y1="29" x2="10" y2="30" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+                    <line x1="34" y1="27" x2="38" y2="26" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+                    <line x1="34" y1="29" x2="38" y2="30" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+                  </svg>
+                </span>
+                <span class="pet-info">
+                  <span class="pet-name">Gato</span>
+                  <span class="pet-sub">Sin orejas de cerdo</span>
+                </span>
+                <span class="pet-check" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="none" class="check-icon"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paso 2 · Salud -->
+        <div class="step is-locked" data-step="2">
+          <div class="step-head">
+            <span class="step-num" data-step-num>2</span>
+            <span class="step-title">Etapa y salud</span>
+          </div>
+          <div class="step-body">
+            <div class="field">
+              <span class="field-label">¿Qué edad tiene?</span>
+              <div class="chip-row">
+                <label class="chip">
+                  <input type="radio" name="pet_age" value="puppy" />
+                  <span class="chip-face">
+                    <svg viewBox="0 0 20 20" fill="none" class="chip-icon"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" opacity="0.4"/><path d="M8 7v4a2 2 0 004 0V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="5" r="1.5" fill="currentColor" opacity="0.5"/></svg>
+                    Cachorro
+                  </span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="pet_age" value="adult" />
+                  <span class="chip-face">
+                    <svg viewBox="0 0 20 20" fill="none" class="chip-icon"><circle cx="10" cy="12" r="6" stroke="currentColor" stroke-width="1.5" opacity="0.4"/><path d="M7 10c0-3 1.5-5 3-5s3 2 3 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="10" cy="13" r="1" fill="currentColor"/></svg>
+                    Adulto o senior
+                  </span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="pet_age" value="unknown" />
+                  <span class="chip-face">
+                    <svg viewBox="0 0 20 20" fill="none" class="chip-icon"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" opacity="0.4"/><path d="M8 8c0-1.5 1-2.5 2-2.5s2 1 2 2c0 1.5-2 2-2 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="10" cy="15" r="1" fill="currentColor"/></svg>
+                    No sé su edad
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">¿Vive con dieta especial o alguna enfermedad?</span>
+              <div class="chip-row">
+                <label class="chip">
+                  <input type="radio" name="pet_sick" value="yes" />
+                  <span class="chip-face">
+                    <svg viewBox="0 0 20 20" fill="none" class="chip-icon"><path d="M6 10h8M10 6v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="2" y="2" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.5" opacity="0.35"/></svg>
+                    Sí, tiene condición
+                  </span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="pet_sick" value="no" />
+                  <span class="chip-face">
+                    <svg viewBox="0 0 20 20" fill="none" class="chip-icon"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    No, está sano
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paso 3 · Peso y antojo -->
+        <div class="step is-locked" data-step="3">
+          <div class="step-head">
+            <span class="step-num" data-step-num>3</span>
+            <span class="step-title">Peso y antojo</span>
+          </div>
+          <div class="step-body">
+            <div class="weight-control">
+              <div class="weight-header">
+                <span class="field-label">Peso aproximado</span>
+                <strong class="weight-pill"><span data-weight-val>15</span> kg<span data-plus hidden>+</span></strong>
+              </div>
+              <input
+                type="range"
+                class="weight-slider"
+                data-weight-slider
+                min="1"
+                max="40"
+                step="1"
+                value="15"
+                aria-label="Peso aproximado de tu mascota en kilogramos"
+              />
+              <div class="weight-scale" aria-hidden="true">
+                <span>1 kg</span>
+                <span>40+ kg</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <span class="field-label">¿Qué se le antoja hoy?</span>
+              <div class="chip-row">
+                {safeProducts.map((p) => (
+                  <label class="chip">
+                    <input type="radio" name="calc_product" value={p.id} />
+                    <span class="chip-face" style={`--chip-color: ${p.accentDeep};`}>
+                      <span class="chip-dot" style={`background: ${p.accentDeep};`}></span>
+                      {p.name}
+                    </span>
+                  </label>
+                ))}
+              </div>
+              <p class="orejas-note" data-orejas-note hidden>
+                <svg viewBox="0 0 16 16" fill="none" class="note-icon"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM8 5v3.5M8 11h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                Las orejas de cerdo son exclusivas para perros.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ Panel derecho: ticket en vivo ═══ -->
+      <aside class="calc-ticket" data-ticket data-state="start" aria-live="polite">
+        <div class="ticket-band">
+          <span class="ticket-band-icon" data-band-emoji aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" class="band-svg"><path d="M12 2C7 2 3 6 3 11c0 3.5 2 6.5 5 8l1 3h6l1-3c3-1.5 5-4.5 5-8 0-5-4-9-9-9z" fill="currentColor" opacity="0.3"/><circle cx="9" cy="11" r="1.5" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><ellipse cx="12" cy="14" rx="2.5" ry="1.5" fill="currentColor" opacity="0.5"/></svg>
+          </span>
+          <span data-band-text>Tu porción ideal</span>
+        </div>
+
+        <ul class="ticket-rows">
+          <li><span>Mascota</span><strong data-sum="pet" class="is-empty">—</strong></li>
+          <li><span>Etapa</span><strong data-sum="age" class="is-empty">—</strong></li>
+          <li><span>Salud</span><strong data-sum="sick" class="is-empty">—</strong></li>
+          <li><span>Peso</span><strong data-sum="weight">15 kg</strong></li>
+          <li><span>Premio</span><strong data-sum="product" class="is-empty">—</strong></li>
+        </ul>
+
+        <div class="ticket-perf" aria-hidden="true"></div>
+
+        <div class="ticket-body">
+          <div class="state" data-state-block="start">
+            <span class="state-icon">
+              <svg viewBox="0 0 40 40" fill="none" class="state-svg"><path d="M20 4C12 4 6 10 6 18c0 5.5 3 10 7.5 12.5L15 38h10l1.5-7.5C31 28 34 23.5 34 18c0-8-6-14-14-14z" fill="var(--pink)" opacity="0.18"/><circle cx="15" cy="17" r="2.5" fill="var(--pink-ink)"/><circle cx="25" cy="17" r="2.5" fill="var(--pink-ink)"/><ellipse cx="20" cy="22" rx="4" ry="2.5" fill="var(--pink)" opacity="0.45"/><path d="M17 24c0 0 1.5 3 3 3s3-3 3-3" stroke="var(--pink-ink)" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            <p><strong>¡Empecemos!</strong> Elige a tu peludo para calcular su porción ideal.</p>
+          </div>
+
+          <div class="state" data-state-block="health">
+            <span class="state-icon">
+              <svg viewBox="0 0 40 40" fill="none" class="state-svg"><rect x="6" y="14" width="28" height="12" rx="3" fill="var(--pink)" opacity="0.18"/><rect x="16" y="6" width="8" height="28" rx="3" fill="var(--pink)" opacity="0.18"/><circle cx="20" cy="20" r="5" fill="var(--pink)" opacity="0.3"/><path d="M18 20h4M20 18v4" stroke="var(--pink-ink)" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            <p><strong>¡Vamos bien!</strong> Cuéntanos su etapa y salud para continuar.</p>
+          </div>
+
+          <div class="state" data-state-block="product">
+            <span class="state-icon">
+              <svg viewBox="0 0 40 40" fill="none" class="state-svg"><path d="M8 16l12-8 12 8v14a2 2 0 01-2 2H10a2 2 0 01-2-2V16z" fill="var(--pink)" opacity="0.15"/><path d="M20 8l12 8" stroke="var(--pink-ink)" stroke-width="1.5" stroke-linecap="round"/><path d="M20 8L8 16" stroke="var(--pink-ink)" stroke-width="1.5" stroke-linecap="round"/><rect x="15" y="22" width="10" height="10" rx="1.5" fill="var(--pink)" opacity="0.3"/><path d="M18 27h4" stroke="var(--pink-ink)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+            <p><strong>¡Ya casi!</strong> Elige el premio que se le antoja hoy.</p>
+          </div>
+
+          <div class="state state-restricted" data-state-block="restricted">
+            <span class="state-icon state-icon--warning">
+              <svg viewBox="0 0 40 40" fill="none" class="state-svg"><path d="M20 4L2 36h36L20 4z" fill="#FFECD6" stroke="var(--brown)" stroke-width="1.5"/><path d="M20 16v8" stroke="var(--brown-dark, #32101C)" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="29" r="1.5" fill="var(--brown-dark, #32101C)"/></svg>
+            </span>
+            <p>
+              <strong>¡La salud es primero!</strong> Por su etapa de desarrollo o su condición médica, lo ideal es
+              <strong>consultar con su veterinario</strong> antes de introducir premios deshidratados.
+            </p>
+            <a
+              class="ticket-wa-link"
+              href={`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent('¡Hola! Mi mascota es cachorro o tiene una dieta especial y quiero asesoría sobre premios deshidratados.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg viewBox="0 0 20 20" fill="none" class="wa-link-icon"><path d="M10 2a8 8 0 00-8 8c0 1.4.4 2.8 1 4l-1 4 4-1c1.2.6 2.6 1 4 1a8 8 0 000-16z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/></svg>
+              Resolver dudas por WhatsApp
+            </a>
+          </div>
+
+          <div class="state state-result" data-state-block="result">
+            <p class="result-label">Dosis recomendada</p>
+            <p class="result-value"><strong data-result-text>—</strong> <span data-result-unit></span></p>
+            <p class="result-tip">No se trata de cantidad, se trata de calidad. Nutrición real, todos los días.</p>
+            <a
+              href="#"
+              class="ticket-cta"
+              data-calc-cta
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Quiero la Bolsa Despensa hoy
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- JSON para el script -->
+<script id="calc-data" type="application/json" set:html={JSON.stringify(payload)}></script>
+
+<style>
+  .sugarmelon-calculator-section {
+    padding-block: var(--space-5);
+    background-color: var(--cream);
+  }
+
+  .calc-head {
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+
+  .calc-head .t-title { color: var(--brown-dark); margin: 0; }
+
+  .calc-desc {
+    color: var(--brown-soft);
+    font-weight: 600;
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    max-width: 34rem;
+    margin: 0.6rem auto 0;
+  }
+
+  /* ═══ Tarjeta de dos paneles ═══ */
+  .calculator-card {
+    --active-color: var(--pink);
+    --active-text: var(--pink-ink);
+
+    display: grid;
+    grid-template-columns: 1.08fr 0.92fr;
+    max-width: 1080px;
+    margin: 0 auto;
+    background: var(--white);
+    border: 1px solid rgba(var(--ink-rgb), 0.05);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+  }
+
+  /* ── Panel izquierdo: pasos ── */
+  .calc-form {
+    padding: clamp(1.4rem, 3vw, 2.25rem);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step {
+    padding: 1.2rem 0;
+    border-bottom: 2px dashed rgba(var(--ink-rgb), 0.08);
+    transition: opacity var(--dur-med) var(--ease-out), filter var(--dur-med) var(--ease-out);
+  }
+  .step:first-child { padding-top: 0; }
+  .step:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--sand);
+    color: var(--brown-dark);
+    font-weight: 900;
+    font-size: 0.92rem;
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-bounce);
+  }
+
+  .step.is-done .step-num {
+    background: var(--pink);
+    color: var(--white);
+    transform: scale(1.08);
+  }
+
+  .step-title {
+    font-weight: 900;
+    font-size: 1.02rem;
+    color: var(--brown-dark);
+  }
+
+  .step.is-locked {
+    opacity: 0.45;
+    filter: saturate(0.5);
+  }
+  .step.is-locked .step-body {
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ── Toggle premium de mascota ── */
+  .pet-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+
+  .pet-card {
+    --pet: var(--pink);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.95rem 1rem;
+    border-radius: var(--radius-lg);
+    border: 2px solid rgba(var(--ink-rgb), 0.08);
+    background: #fdfbf8;
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-bounce),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .pet-card--cat { --pet: #1B6E8C; }
+
+  .pet-card input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pet-card:hover {
+    border-color: color-mix(in srgb, var(--pet) 45%, transparent);
+    transform: translateY(-2px);
+  }
+
+  .pet-card:has(input:checked) {
+    border-color: var(--pet);
+    background: color-mix(in srgb, var(--pet) 6%, var(--white));
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px -14px color-mix(in srgb, var(--pet) 55%, transparent);
+  }
+
+  .pet-card:has(input:focus-visible) {
+    outline: 3px solid var(--pink);
+    outline-offset: 3px;
+  }
+
+  .pet-avatar {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--pet) 12%, var(--white));
+    color: var(--pet);
+    transition: transform var(--dur-fast) var(--ease-bounce);
+  }
+
+  .pet-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .check-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .pet-card:has(input:checked) .pet-avatar {
+    transform: scale(1.1) rotate(-6deg);
+  }
+
+  .pet-info { display: flex; flex-direction: column; line-height: 1.25; }
+
+  .pet-name {
+    font-weight: 900;
+    font-size: 1.12rem;
+    color: var(--brown-dark);
+  }
+
+  .pet-sub {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--brown-soft);
+  }
+
+  .pet-check {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--pet);
+    color: var(--white);
+    font-size: 0.85rem;
+    font-weight: 900;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--pet) 45%, transparent);
+    opacity: 0;
+    transform: scale(0.3);
+    transition: opacity var(--dur-fast) var(--ease-bounce), transform var(--dur-fast) var(--ease-bounce);
+  }
+
+  .pet-card:has(input:checked) .pet-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ── Campos y chips ── */
+  .field + .field { margin-top: 1.1rem; }
+
+  .field-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--brown-soft);
+    margin-bottom: 0.55rem;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .chip { position: relative; }
+
+  .chip input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip-face {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.58rem 1rem;
+    border-radius: 999px;
+    border: 2px solid rgba(var(--ink-rgb), 0.08);
+    background: #fdfbf8;
+    color: var(--brown);
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-bounce),
+      box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  .chip-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--chip-color, var(--pink-ink));
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .chip input:checked + .chip-face .chip-icon {
+    color: var(--white);
+  }
+
+  .chip-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+
+  .chip input:checked + .chip-face .chip-dot {
+    background: var(--white) !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+  }
+
+  .chip-face:hover {
+    border-color: color-mix(in srgb, var(--chip-color, var(--pink)) 45%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .chip:has(input:focus-visible) .chip-face {
+    outline: 3px solid var(--pink);
+    outline-offset: 3px;
+  }
+
+  .chip input:checked + .chip-face {
+    background: color-mix(in srgb, var(--chip-color, var(--pink)) 86%, black);
+    border-color: var(--chip-color, var(--pink));
+    color: var(--white);
+    box-shadow: 0 8px 18px -6px var(--chip-color, var(--pink));
+    transform: translateY(-1px);
+  }
+
+  .chip input:disabled + .chip-face {
+    opacity: 0.45;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  .orejas-note {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.6rem 0 0;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--pink-ink);
+  }
+
+  .note-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ── Slider de peso ── */
+  .weight-control {
+    background: #fdfbf8;
+    border: 1px solid rgba(var(--ink-rgb), 0.07);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.15rem 0.85rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .weight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+  }
+  .weight-header .field-label { margin-bottom: 0; }
+
+  .weight-pill {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--active-text);
+    background: color-mix(in srgb, var(--active-color) 10%, var(--white));
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+  }
+
+  .weight-slider {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    height: 10px;
+    border-radius: 999px;
+    background: #efe7dd;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .weight-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--active-color);
+    border: 4px solid var(--white);
+    box-shadow: 0 4px 12px rgba(var(--ink-rgb), 0.25);
+    transition: transform var(--dur-fast) var(--ease-bounce);
+  }
+  .weight-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+  .weight-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--active-color);
+    border: 4px solid var(--white);
+    box-shadow: 0 4px 12px rgba(var(--ink-rgb), 0.25);
+  }
+
+  .weight-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--brown-soft);
+  }
+
+  /* ═══ Panel derecho: ticket ═══ */
+  .calc-ticket {
+    --tpx: clamp(1.3rem, 2.6vw, 2rem);
+    --band-bg: color-mix(in srgb, var(--active-color) 86%, black);
+
+    position: sticky;
+    top: 92px;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-muted);
+    border-left: 2px dashed rgba(var(--ink-rgb), 0.15);
+  }
+
+  .ticket-band {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.05rem var(--tpx);
+    background: var(--band-bg);
+    color: var(--white);
+    font-weight: 900;
+    font-size: 1.02rem;
+    letter-spacing: 0.02em;
+    transition: background var(--dur-med) var(--ease-out);
+  }
+
+  /* Cenefa dentada de ticket */
+  .ticket-band::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 7px;
+    background: conic-gradient(from 135deg at 50% 0%, var(--band-bg) 90deg, transparent 0) 0 0 / 14px 7px repeat-x;
+  }
+
+  .ticket-band-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .band-svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ticket-rows {
+    list-style: none;
+    margin: 0;
+    padding: 1.15rem var(--tpx) 0;
+  }
+
+  .ticket-rows li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.42rem 0;
+    border-bottom: 1px dashed rgba(var(--ink-rgb), 0.12);
+    font-size: 0.9rem;
+  }
+  .ticket-rows li:last-child { border-bottom: none; }
+
+  .ticket-rows span {
+    color: var(--brown-soft);
+    font-weight: 700;
+  }
+
+  .ticket-rows strong {
+    font-weight: 900;
+    color: var(--brown-dark);
+    text-align: right;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  .ticket-rows strong.is-empty {
+    opacity: 0.35;
+    font-weight: 700;
+  }
+
+  .ticket-perf {
+    position: relative;
+    margin: 1.1rem var(--tpx) 0;
+    border-top: 2px dashed rgba(var(--ink-rgb), 0.2);
+  }
+
+  /* Agujeritos de la perforación */
+  .ticket-perf::before,
+  .ticket-perf::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--cream);
+    box-shadow: inset 0 1px 2px rgba(var(--ink-rgb), 0.18);
+  }
+  .ticket-perf::before { left: calc(-1 * var(--tpx) - 7px); }
+  .ticket-perf::after { right: calc(-1 * var(--tpx) - 7px); }
+
+  .ticket-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.15rem var(--tpx) 1.5rem;
+    min-height: 218px;
+    flex: 1;
+  }
+
+  .state { display: none; width: 100%; }
+
+  .ticket[data-state='start'] [data-state-block='start'],
+  .ticket[data-state='health'] [data-state-block='health'],
+  .ticket[data-state='product'] [data-state-block='product'],
+  .ticket[data-state='restricted'] [data-state-block='restricted'],
+  .ticket[data-state='result'] [data-state-block='result'] {
+    display: block;
+    animation: stateIn var(--dur-med) var(--ease-out);
+  }
+
+  @keyframes stateIn {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+
+  .state {
+    text-align: center;
+    color: var(--brown-soft);
+    font-weight: 600;
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+  .state p { margin: 0; }
+  .state strong { color: var(--brown-dark); }
+
+  .state-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.55rem;
+  }
+
+  .state-svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .state-icon--warning .state-svg {
+    width: 42px;
+    height: 42px;
+  }
+
+  .state-restricted p {
+    text-align: left;
+    background: var(--white);
+    border: 2px dashed var(--pink);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.1rem;
+    color: var(--brown-dark);
+    font-size: 0.92rem;
+  }
+
+  .ticket-wa-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--pink-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ticket-wa-link:hover { color: var(--pink); }
+
+  .wa-link-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  /* Estado resultado */
+  .result-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--brown-soft);
+    margin-bottom: 0.35rem;
+  }
+
+  .result-value {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(1.9rem, 3.2vw, 2.5rem);
+    line-height: 1.12;
+    color: var(--active-text);
+    margin: 0 0 0.7rem;
+    transition: color var(--dur-med) var(--ease-out);
+  }
+
+  .result-value span {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--brown-soft);
+  }
+
+  .result-tip {
+    font-size: 0.88rem;
+    margin-bottom: 1.1rem !important;
+  }
+
+  .ticket-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem 1.4rem;
+    border-radius: 999px;
+    background: var(--band-bg);
+    color: var(--white);
+    font-weight: 900;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    box-shadow: 0 14px 28px -10px var(--active-color);
+    transition: transform var(--dur-fast) var(--ease-bounce), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .ticket-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 34px -10px var(--active-color);
+  }
+
+  /* ═══ Responsive ═══ */
+  @media (max-width: 920px) {
+    .calculator-card { grid-template-columns: 1fr; }
+
+    .calc-ticket {
+      position: static;
+      border-left: none;
+      border-top: 2px dashed rgba(var(--ink-rgb), 0.15);
+    }
+
+    .ticket-body { min-height: 0; }
+
+    .pet-cards { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  // ═══ Lógica de la Calculadora de Porciones ═══
+  const dataScript = document.getElementById('calc-data');
+
+  if (dataScript) {
+    const payload = JSON.parse(dataScript.textContent || '{}');
+    const products: any[] = payload.products || [];
+    const whatsapp: string = payload.whatsapp || '525528462102';
+
+    const card = document.querySelector('[data-calculator-card]') as HTMLElement;
+    const ticket = document.querySelector('[data-ticket]') as HTMLElement;
+    const stepEls = Array.from(document.querySelectorAll('[data-step]')) as HTMLElement[];
+    const stepOf = (n: number) => stepEls.find((s) => s.dataset.step === String(n))!;
+
+    const orejasNote = document.querySelector('[data-orejas-note]') as HTMLElement;
+    const slider = document.querySelector('[data-weight-slider]') as HTMLInputElement;
+    const weightVal = document.querySelector('[data-weight-val]') as HTMLElement;
+    const plusSpan = document.querySelector('[data-plus]') as HTMLElement;
+    const bandText = document.querySelector('[data-band-text]') as HTMLElement;
+    const resultText = document.querySelector('[data-result-text]') as HTMLElement;
+    const resultUnit = document.querySelector('[data-result-unit]') as HTMLElement;
+    const ctaBtn = document.querySelector('[data-calc-cta]') as HTMLAnchorElement;
+
+    const sumEls: Record<string, HTMLElement> = {};
+    document.querySelectorAll<HTMLElement>('[data-sum]').forEach((el) => {
+      sumEls[el.dataset.sum as string] = el;
+    });
+
+    const PET_LABEL: Record<string, string> = { dog: 'Perro', cat: 'Gato' };
+    const AGE_LABEL: Record<string, string> = { puppy: 'Cachorro', adult: 'Adulto', unknown: 'Sin definir' };
+    const SICK_LABEL: Record<string, string> = { yes: 'Con dieta', no: 'Sano' };
+
+    const state = { pet: '', age: '', sick: '', product: '', weight: 15 };
+
+    const isRestricted = () => state.age === 'puppy' || state.age === 'unknown' || state.sick === 'yes';
+
+    function setSum(key: string, value: string, empty: boolean) {
+      const el = sumEls[key];
+      if (!el) return;
+      el.textContent = value || '—';
+      el.classList.toggle('is-empty', empty);
+    }
+
+    function setStepDone(n: number, done: boolean) {
+      const step = stepOf(n);
+      const num = step.querySelector('[data-step-num]') as HTMLElement;
+      step.classList.toggle('is-done', done);
+      num.textContent = done ? '✓' : String(n);
+    }
+
+    /** Lee los inputs, sincroniza bloqueos/resúmenes y pinta el ticket */
+    function sync() {
+      const petInput = document.querySelector('input[name="pet_type"]:checked') as HTMLInputElement | null;
+      const ageInput = document.querySelector('input[name="pet_age"]:checked') as HTMLInputElement | null;
+      const sickInput = document.querySelector('input[name="pet_sick"]:checked') as HTMLInputElement | null;
+
+      state.pet = petInput?.value || '';
+      state.age = ageInput?.value || '';
+      state.sick = sickInput?.value || '';
+
+      // Orejas: exclusivo para perros — deseleccionar ANTES de leer el premio elegido
+      const orejasInput = document.querySelector('input[name="calc_product"][value="orejas"]') as HTMLInputElement;
+      if (state.pet === 'cat' && orejasInput.checked) orejasInput.checked = false;
+
+      const productInput = document.querySelector('input[name="calc_product"]:checked') as HTMLInputElement | null;
+      state.product = productInput && !productInput.disabled ? productInput.value : '';
+
+      const petDone = !!state.pet;
+      const healthDone = !!(state.age && state.sick);
+      const restricted = healthDone && isRestricted();
+      const lock2 = !petDone;
+      const lock3 = !healthDone || restricted;
+
+      // Estados visuales de los pasos
+      stepOf(2).classList.toggle('is-locked', lock2);
+      stepOf(3).classList.toggle('is-locked', lock3);
+      setStepDone(1, petDone);
+      setStepDone(2, healthDone);
+      setStepDone(3, !!state.product && !lock3);
+
+      // Inputs deshabilitados de verdad (accesible con teclado)
+      stepOf(2).querySelectorAll<HTMLInputElement>('input').forEach((i) => (i.disabled = lock2));
+      stepOf(3).querySelectorAll<HTMLInputElement>('input').forEach((i) => (i.disabled = lock3));
+
+      // Orejas: exclusivo para perros
+      orejasInput.disabled = lock3 || state.pet === 'cat';
+      orejasNote.hidden = state.pet !== 'cat';
+
+      // Resumen del ticket
+      setSum('pet', state.pet ? PET_LABEL[state.pet] : '', !state.pet);
+      setSum('age', state.age ? AGE_LABEL[state.age] : '', !state.age);
+      setSum('sick', state.sick ? SICK_LABEL[state.sick] : '', !state.sick);
+      setSum('weight', `${state.weight} kg`, false);
+      const product = products.find((p: any) => p.id === state.product);
+      setSum('product', product ? `${product.emoji} ${product.name}` : '', !product);
+
+      render(product);
+    }
+
+    function render(product: any) {
+      let next = 'start';
+      if (!state.pet) next = 'start';
+      else if (!state.age || !state.sick) next = 'health';
+      else if (isRestricted()) next = 'restricted';
+      else if (!state.product) next = 'product';
+      else next = 'result';
+
+      ticket.dataset.state = next;
+
+      if (next === 'result' && product) {
+        card.style.setProperty('--active-color', product.accentDeep);
+        card.style.setProperty('--active-text', `color-mix(in srgb, ${product.accentDeep} 75%, black)`);
+
+        const range = product.ranges.find((r: any) => state.weight <= r.maxKg);
+        resultText.textContent = range ? range.result : '—';
+        resultUnit.textContent = product.unit;
+
+        bandText.textContent = `Bolsa ${product.name}`;
+
+        const petWord = state.pet === 'cat' ? 'gato' : 'perro';
+        const msg = `¡Hola! Acabo de calcular la dosis para mi ${petWord} de ${state.weight}kg y quiero pedir la Bolsa Despensa de ${product.name} ${product.emoji}.`;
+        ctaBtn.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`;
+      } else {
+        card.style.removeProperty('--active-color');
+        card.style.removeProperty('--active-text');
+        if (next === 'restricted') {
+          bandText.textContent = 'Consulta veterinaria';
+        } else {
+          bandText.textContent = 'Tu porción ideal';
+        }
+      }
+
+      updateSliderFill();
+    }
+
+    function updateSliderFill() {
+      const min = Number(slider.min);
+      const max = Number(slider.max);
+      const pct = ((state.weight - min) / (max - min)) * 100;
+      slider.style.background = `linear-gradient(to right, var(--active-color) ${pct}%, #efe7dd ${pct}%)`;
+    }
+
+    // Listeners: cualquier cambio re-sincroniza todo
+    ['pet_type', 'pet_age', 'pet_sick', 'calc_product'].forEach((name) => {
+      document.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`).forEach((input) => {
+        input.addEventListener('change', sync);
+      });
+    });
+
+    slider.addEventListener('input', () => {
+      state.weight = Number(slider.value);
+      weightVal.textContent = String(state.weight);
+      plusSpan.hidden = state.weight < 40;
+      sync();
+    });
+
+    // Estado inicial
+    sync();
+  }
+</script>

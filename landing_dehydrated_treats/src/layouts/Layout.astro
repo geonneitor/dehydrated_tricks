@@ -21,14 +21,14 @@ const ogImageURL = Astro.site ? new URL(ogImage.src, Astro.site).href : ogImage.
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#FAF3EB" />
+    <meta name="theme-color" content="#FFF8EF" />
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Nunito:wght@400;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,500&family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Nunito:wght@400;600;700;800;900&display=swap"
       rel="stylesheet"
     />
     <meta property="og:title" content={title} />
@@ -48,5 +48,45 @@ const ogImageURL = Astro.site ? new URL(ogImage.src, Astro.site).href : ogImage.
   </head>
   <body>
     <slot />
+    
+    <script>
+      import Lenis from 'lenis';
+
+      // 1. Lenis: Scroll Mantequilla
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+      });
+
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // 2. Easter Egg Sensorial: Huellitas
+      document.addEventListener('click', (e) => {
+        // No mostrar si hacen clic en un elemento interactivo principal
+        if ((e.target as HTMLElement).closest('a, button')) return;
+
+        const paw = document.createElement('div');
+        paw.classList.add('easter-paw');
+        
+        const rot = Math.random() * 40 - 20; // Rotación aleatoria
+        
+        paw.style.left = `${e.clientX}px`;
+        paw.style.top = `${e.clientY}px`;
+        paw.style.setProperty('--rot', `${rot}deg`);
+        
+        paw.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 13c-2.5 0-5 2-5 4.5 0 1.5 1.2 2.5 2.5 2.5 1 0 1.7-.5 2.5-.5s1.5.5 2.5.5c1.3 0 2.5-1 2.5-2.5C17 15 14.5 13 12 13zM6.5 8.5A1.8 1.8 0 1 0 6.5 4.9a1.8 1.8 0 0 0 0 3.6zm4-1A1.8 1.8 0 1 0 10.5 3.9 1.8 1.8 0 0 0 10.5 7.5zm3 0a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zm4 1a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6z"/></svg>`;
+        
+        document.body.appendChild(paw);
+        
+        setTimeout(() => paw.remove(), 1200);
+      });
+    </script>
   </body>
 </html>

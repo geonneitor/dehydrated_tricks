@@ -1,66 +1,354 @@
 ---
-import { SITE, waLink } from '../data/products';
-import mascot from '../assets/mascot/mascot-frontal.png';
 import kibbleHeart from '../assets/kibble/kibble-heart.png';
 import kibbleFlower from '../assets/kibble/kibble-flower.png';
+import mascotHero from '../assets/mascot/mascot-hero.webp';
 ---
 
-<section class="hero" id="inicio">
-  <div class="hero__bg" aria-hidden="true">
+<section class="hero-sugarmelon" id="inicio">
+  <div class="hero-sugarmelon__bg" aria-hidden="true">
     <div class="blob blob--1"></div>
     <div class="blob blob--2"></div>
     <div class="blob blob--3"></div>
   </div>
 
-  <div class="container hero__grid">
-    <div class="hero__copy">
-      <span class="eyebrow">🐾 100% natural · un solo ingrediente</span>
-      <h1 class="display-1">
-        El mejor premio
-        <img src={kibbleHeart.src} alt="" class="inline-kibble" width={kibbleHeart.width} height={kibbleHeart.height} loading="eager" /> para tu
-        <span class="accent-script">mascota</span>
+  <div class="container hero-sugarmelon__grid">
+    <div class="hero-sugarmelon__copy">
+      <div class="kicker">
+        <span class="kicker-star">✦</span> Cero culpa · 100% natural · un solo ingrediente
+      </div>
+      
+      <h1 class="hero-title t-display">
+        <span class="accent-script">El premio que</span><br/>
+        <span class="font-light">tu perro te</span> <span class="font-bold">agradecerá.</span>
       </h1>
-      <p class="lead">{SITE.claim} Nutrición real que tu familia merece.</p>
+      
+      <p class="hero-desc">
+        Olvídate de las etiquetas interminables y la comida chatarra. Solo proteína real y el sabor que ellos instintivamente aman.
+      </p>
 
-      <div class="hero__actions">
-        <a href="#productos" class="btn btn--primary">Ver premios</a>
-        <a
-          href={waLink('¡Hola! Me interesan los premios deshidratados 🐾')}
-          class="btn btn--ghost"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Pedir por WhatsApp
-        </a>
+      <div class="hero-actions">
+        <a href="#calculadora" class="btn btn--glass">Calcula la porción</a>
+        <a href="#productos" class="btn btn--primary">Quiero verlos felices</a>
       </div>
 
-      <div class="hero__stats">
-        <div class="hero__stat">
+      <div class="hero-stats">
+        <div class="hero-stat">
           <strong>1</strong>
           <span>Ingrediente</span>
         </div>
-        <div class="hero__stat">
+        <div class="hero-stat">
           <strong>0</strong>
           <span>Conservadores</span>
         </div>
-        <div class="hero__stat">
+        <div class="hero-stat">
           <strong>68%</strong>
           <span>Proteína máx.</span>
         </div>
       </div>
     </div>
 
-    <div class="hero__mascot">
-      <img src={mascot.src} alt="Mascota de Guaw & Miaw" class="mascot-img" width={mascot.width} height={mascot.height} loading="eager" />
-      <svg class="stamp" viewBox="0 0 100 100" aria-hidden="true">
-        <path id="circlePath" fill="none" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
-        <text font-family="Nunito, sans-serif" font-weight="900" font-size="12.5" fill="#5c3a1e" letter-spacing="1.5">
-          <textPath href="#circlePath">100% NATURAL · SIN CONSERVADORES ·</textPath>
-        </text>
-        <circle cx="50" cy="50" r="12" fill="#d4294b" />
-      </svg>
-      <img src={kibbleFlower.src} alt="" class="float-kibble float-kibble--a" aria-hidden="true" width={kibbleFlower.width} height={kibbleFlower.height} loading="eager" />
-      <img src={kibbleHeart.src} alt="" class="float-kibble float-kibble--b" aria-hidden="true" width={kibbleHeart.width} height={kibbleHeart.height} loading="eager" />
+    <!-- 3D Tilt: mascota flotante con profundidad -->
+    <div class="hero-3d-stage" data-tilt-stage>
+      <div class="tilt-scene" data-tilt-scene>
+        <div class="tilt-shadow" aria-hidden="true"></div>
+        <img
+          src={mascotHero.src}
+          alt="Mascota de Guaw & Miaw"
+          class="tilt-mascot"
+          data-tilt-card
+          width={mascotHero.width}
+          height={mascotHero.height}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+      <div class="tilt-gloss" aria-hidden="true"></div>
+      <!-- Decorative floating kibbles at different depths -->
+      <img src={kibbleFlower.src} alt="" class="float-kibble float-kibble--a" aria-hidden="true" width={kibbleFlower.width} height={kibbleFlower.height} loading="lazy" />
+      <img src={kibbleHeart.src} alt="" class="float-kibble float-kibble--b" aria-hidden="true" width={kibbleHeart.width} height={kibbleHeart.height} loading="lazy" />
     </div>
   </div>
 </section>
+
+<script>
+  // ═══ Tilt 3D de la mascota: la escena rota siguiendo el cursor con easing ═══
+  const stage = document.querySelector<HTMLElement>('[data-tilt-stage]');
+  const scene = document.querySelector<HTMLElement>('[data-tilt-scene]');
+
+  const canTilt =
+    stage &&
+    scene &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canTilt) {
+    const MAX_DEG = 10; // inclinación máxima
+    let raf = 0;
+    let tx = 0, ty = 0; // objetivo (-1..1)
+    let cx = 0, cy = 0; // valor actual con easing
+
+    const shadow = scene.querySelector<HTMLElement>('.tilt-shadow');
+    const gloss = stage.querySelector<HTMLElement>('.tilt-gloss');
+
+    const apply = () => {
+      raf = 0;
+      cx += (tx - cx) * 0.12;
+      cy += (ty - cy) * 0.12;
+
+      scene.style.transform = `rotateX(${(-cy * MAX_DEG).toFixed(2)}deg) rotateY(${(cx * MAX_DEG).toFixed(2)}deg)`;
+      shadow?.style.setProperty('--sx', `${(cx * -22).toFixed(1)}px`);
+      gloss?.style.setProperty('--gx', cx.toFixed(3));
+      gloss?.style.setProperty('--gy', cy.toFixed(3));
+
+      // Sigue interpolando hasta asentarse
+      if (Math.abs(tx - cx) > 0.01 || Math.abs(ty - cy) > 0.01) {
+        raf = requestAnimationFrame(apply);
+      } else {
+        // Fijar exactamente a los valores objetivo al terminar
+        cx = tx;
+        cy = ty;
+        scene.style.transform = `rotateX(${(-cy * MAX_DEG).toFixed(2)}deg) rotateY(${(cx * MAX_DEG).toFixed(2)}deg)`;
+      }
+    };
+
+    const onMove = (e: MouseEvent) => {
+      const r = stage.getBoundingClientRect();
+      tx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
+      ty = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+
+    const onLeave = () => {
+      tx = 0;
+      ty = 0;
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+
+    stage.addEventListener('mousemove', onMove);
+    stage.addEventListener('mouseleave', onLeave);
+  }
+</script>
+
+<style>
+  /* Scoped CSS para el Hero estilo Sugarmelon */
+  .hero-sugarmelon {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    align-items: center;
+    padding-top: clamp(6.5rem, 14vh, 8rem);
+    padding-bottom: var(--space-5);
+    background: radial-gradient(ellipse at 8% 92%, rgba(255, 236, 214, 0.5), transparent 45%),
+                radial-gradient(ellipse at 72% 48%, rgba(var(--pink-rgb), 0.1), transparent 56%);
+  }
+
+  /* Landscape corto: la sección crece en vez de recortar contenido */
+  @media (max-height: 700px) {
+    .hero-sugarmelon { min-height: auto; }
+  }
+
+  .hero-sugarmelon__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .hero-sugarmelon__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    gap: var(--space-4);
+    z-index: 10;
+    position: relative;
+  }
+
+  /* Title Typography: fuente y escala fluida vienen de .t-display global */
+  .hero-title {
+    margin: 0;
+    color: var(--brown-dark);
+  }
+
+  .hero-title .accent-script {
+    font-size: 1.1em;
+  }
+
+  .hero-title .font-light {
+    font-weight: 400;
+  }
+
+  .hero-title .font-bold {
+    font-weight: 900;
+  }
+
+  /* Description */
+  .hero-desc {
+    margin-top: 24px;
+    max-width: 28rem;
+    font-size: clamp(0.95rem, 1.35vw, 1.05rem);
+    line-height: 1.65;
+    color: var(--brown-soft);
+    font-weight: 600;
+  }
+
+  /* Actions */
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+  }
+
+  /* Botones: base y variantes viven en global.css (.btn) */
+
+  /* Stats */
+  .hero-stats {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: 48px;
+  }
+
+  .hero-stat strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--brown-dark);
+    line-height: 1.1;
+  }
+
+  .hero-stat span {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--pink-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ═══ 3D Tilt: mascota flotante ═══ */
+  .hero-3d-stage {
+    --gx: 0;
+    --gy: 0;
+
+    position: relative;
+    width: 100%;
+    max-width: 470px;
+    aspect-ratio: 1 / 1;
+    margin-inline: auto;
+    display: grid;
+    place-items: center;
+    perspective: 1100px;
+  }
+
+
+
+  .tilt-scene {
+    position: relative;
+    width: 92%;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .tilt-mascot {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: translateZ(46px);
+    filter: drop-shadow(0 26px 30px rgba(var(--ink-rgb), 0.22));
+    will-change: transform;
+  }
+
+  /* Sombra de contacto: se mueve en sentido contrario al tilt */
+  .tilt-shadow {
+    position: absolute;
+    left: 50%;
+    bottom: 2%;
+    width: 64%;
+    height: 7%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(var(--ink-rgb), 0.28), transparent);
+    filter: blur(7px);
+    transform: translate3d(calc(-50% + var(--sx, 0px)), 0, -70px);
+    transition: transform 0.1s linear;
+  }
+
+  /* Brillo especular que recorre la tarjeta según el cursor */
+  .tilt-gloss {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at calc(50% + var(--gx) * 42%) calc(38% + var(--gy) * 34%),
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0) 52%
+    );
+    opacity: 0;
+    transition: opacity var(--dur-med) var(--ease-out);
+    mix-blend-mode: soft-light;
+  }
+
+  .hero-3d-stage:hover .tilt-gloss { opacity: 1; }
+
+  /* Decoraciones / Blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.55;
+    animation: blob-drift 18s ease-in-out infinite alternate;
+  }
+
+  .blob--1 { width: 46vw; height: 46vw; background: var(--pink-soft); top: -12%; right: -8%; }
+  .blob--2 { width: 34vw; height: 34vw; background: var(--sand); bottom: -10%; left: -6%; animation-delay: -6s; }
+  .blob--3 { width: 18vw; height: 18vw; background: var(--sand-deep); top: 40%; left: 42%; animation-delay: -12s; }
+
+  @keyframes blob-drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(6vw, -4vh) scale(1.15); }
+  }
+
+  /* Croquetas flotantes: translateZ propio = parallax al rotar la escena.
+     El vaivén usa las propiedades individuales translate/rotate para no
+     pisar el transform de profundidad. */
+  .float-kibble {
+    position: absolute;
+    z-index: 2;
+    width: 46px;
+    opacity: 0.9;
+    transform: translateZ(95px);
+    animation: kibble-bob 7s ease-in-out infinite;
+    filter: drop-shadow(0 8px 12px rgba(var(--ink-rgb), 0.18));
+    pointer-events: none;
+  }
+
+  .float-kibble--a { top: -6%; left: -7%; animation-delay: -2s; }
+  .float-kibble--b { bottom: -2%; right: -4%; width: 36px; transform: translateZ(150px); animation-delay: -4.5s; }
+
+  @keyframes kibble-bob {
+    0%, 100% { translate: 0 0; rotate: -10deg; }
+    50% { translate: 0 -22px; rotate: 14deg; }
+  }
+
+  /* Táctil / sin hover: vaivén 3D suave en reposo (el JS de tilt no corre) */
+  @media (hover: none) {
+    .tilt-scene { animation: tilt-idle 7s ease-in-out infinite; }
+  }
+
+  @keyframes tilt-idle {
+    0%, 100% { transform: rotateX(0deg) rotateY(0deg); }
+    33% { transform: rotateX(2.5deg) rotateY(-4deg); }
+    66% { transform: rotateX(-2deg) rotateY(3.5deg); }
+  }
+
+  @media (max-width: 1024px) {
+    .hero-sugarmelon__grid {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .hero-desc { margin-inline: auto; }
+    .hero-actions, .hero-stats { justify-content: center; }
+    .hero-3d-stage { margin-top: var(--space-3); max-width: 400px; }
+  }
+</style>
