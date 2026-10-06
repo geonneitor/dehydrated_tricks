@@ -1,5 +1,5 @@
 ---
-import { products } from '../data/products';
+import { products, waLink } from '../data/products';
 import card1 from '../assets/products/charales.png';
 import card2 from '../assets/products/higados.png';
 import card3 from '../assets/products/orejas.png';
@@ -12,8 +12,6 @@ import spec2 from '../assets/specs/higados-spec.png';
 import spec3 from '../assets/specs/orejas-spec.png';
 import spec4 from '../assets/specs/mollejas-spec.png';
 import spec5 from '../assets/specs/patitas-spec.png';
-
-import PortionCalculator from './PortionCalculator.astro';
 
 const cardImages = [card1, card2, card3, card4, card5];
 const specImages = [spec1, spec2, spec3, spec4, spec5];
@@ -29,124 +27,259 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
         Premios frescos, <span class="accent-script">ofertas jugosas.</span>
       </h2>
       <p class="store-desc">
-        Nuestros premios de un solo ingrediente. Toca una tarjeta para ver la información nutrimental.
+        Nuestros premios de un solo ingrediente, en dos tamaños. Precios en pesos mexicanos;
+        toca una tarjeta para ver la etiqueta nutrimental completa.
       </p>
     </header>
 
     <div class="products-row">
       {products.map((p, i) => (
-        <button class="product-card-btn" data-product={JSON.stringify(p)} data-spec={specImages[i].src}>
+        <article class="product-card">
           <img
             src={cardImages[i].src}
-            alt={`Tarjeta de ${p.name}`}
+            alt=""
             class="product-card__img"
+            width={cardImages[i].width}
+            height={cardImages[i].height}
           />
-        </button>
+
+          <!-- Texto real en el HTML: indexable y visible sin JavaScript -->
+          <div class="product-card__body">
+            <h3 class="product-card__name">{p.name}</h3>
+            <p class="product-card__claim">{p.proteinLabel} · {p.tagline}</p>
+            <ul class="product-card__prices">
+              {p.presentations.map((pres) => (
+                <li class={pres.isPopular ? 'product-card__pres is-popular' : 'product-card__pres'}>
+                  <span>{pres.name} <em>{pres.weight}</em></span>
+                  <strong>${pres.price}</strong>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Botón estirado: toda la tarjeta abre el detalle sin anidar elementos interactivos -->
+          <button
+            class="product-card-btn"
+            type="button"
+            data-id={p.id}
+            data-name={p.name}
+            data-spec={specImages[i].src}
+            data-spec-w={specImages[i].width}
+            data-spec-h={specImages[i].height}
+          >
+            <span class="sr-only">Ver etiqueta nutrimental y precios de {p.name}</span>
+          </button>
+        </article>
       ))}
     </div>
   </div>
 
-  <dialog id="nutrition-modal" class="nutrition-modal">
-    <div class="modal-body" id="modal-body">
-      <!-- Content injected by JS -->
-    </div>
-  </dialog>
+  <dialog id="nutrition-modal" class="nutrition-modal" aria-labelledby="nutrition-modal-title">
+    <div class="modal-body">
+      <div class="app-modal-wrapper">
+        <!-- Barra superior: identifica el producto y deja cerrar el panel -->
+        <header class="modal-topbar">
+          <div class="modal-topbar__text">
+            <p class="modal-topbar__kicker">Premio deshidratado</p>
+            <!-- El nombre accesible del diálogo se reescribe con el producto abierto -->
+            <h2 class="modal-topbar__title" id="nutrition-modal-title">
+              <span data-modal-product>Premios Guaw &amp; Miaw</span>
+              <small>Etiqueta y porción diaria</small>
+            </h2>
+          </div>
+          <button class="modal-close-glass" id="btn-close-modal" type="button" aria-label="Cerrar información">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+          </button>
+        </header>
 
-  <!-- Contenedor oculto para preservar el estado de la calculadora cuando el modal se cierra o cambia de producto -->
-  <div id="hidden-calc-storage" style="display: none;">
-    <div class="modal-calc-wrapper" id="modal-calc-wrapper">
-       <PortionCalculator />
-    </div>
-  </div>
-</section>
+        <!-- Sólo en móvil: en escritorio caben las dos columnas a la vez -->
+        <div class="modal-tabs" role="group" aria-label="Vistas del panel">
+          <button class="modal-tab is-active" id="tab-calc" type="button" data-view="calc" aria-controls="calc-mount-point" aria-pressed="true">Tu porción</button>
+          <button class="modal-tab" id="tab-spec" type="button" data-view="spec" aria-controls="spec-content" aria-pressed="false">Etiqueta</button>
+        </div>
 
-<script>
-  const modal = document.getElementById('nutrition-modal') as HTMLDialogElement;
-  const modalBody = document.getElementById('modal-body');
-  const calcWrapper = document.getElementById('modal-calc-wrapper');
-  
-  const buttons = document.querySelectorAll('.product-card-btn');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const product = JSON.parse((btn as HTMLElement).dataset.product || '{}');
-      const specSrc = (btn as HTMLElement).dataset.spec || '';
-      
-      // SALVAR LA CALCULADORA ANTES DE REESCRIBIR EL DOM
-      if (calcWrapper && document.getElementById('hidden-calc-storage')) {
-        document.getElementById('hidden-calc-storage')?.appendChild(calcWrapper);
-      }
-      
-      if (modalBody) {
-        modalBody.innerHTML = `
-          <div class="app-modal-wrapper">
-            <button class="modal-close-glass" id="btn-close-modal" aria-label="Cerrar modal">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
-            </button>
-            
-            <div class="app-modal-scroll" id="spec-content">
-              <div style="position: relative; display: block; width: 100%;">
-                <img src="${specSrc}" alt="Especificaciones de ${product.name}" class="spec-img-full" />
-                <!-- Botón invisible que cubre toda la imagen para que sea infalible -->
-                <div id="image-calc-trigger" class="invisible-calc-trigger" title="Calcula la porción"></div>
+        <div class="modal-panels" id="modal-panels" data-view="calc">
+          <!-- Columna izquierda: ficha del producto + su etiqueta. La imagen crece o
+               encoge con el espacio disponible, por eso el panel no necesita scroll. -->
+          <div class="modal-panel modal-panel--spec" id="spec-content" tabindex="-1">
+            <!-- Resumen y precios por producto (HTML real, se muestra el de la tarjeta abierta) -->
+            {products.map((p) => (
+              <div class="modal-summary" data-detail={p.id} hidden>
+                <h3 class="modal-summary__name">{p.name}</h3>
+                <p class="modal-summary__claim">{p.proteinLabel} · {p.tagline}</p>
+                <p class="modal-summary__ingredients">{p.ingredients}</p>
+                <div class="modal-summary__options">
+                  {p.presentations.map((pres) => (
+                    <a
+                      href={waLink(`¡Hola! Quiero pedir ${p.name} — ${pres.name} (${pres.weight}) a $${pres.price}`)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={`--accent: ${p.accentDeep};`}
+                    >
+                      <span>{pres.name} <em>{pres.weight}</em></span>
+                      <strong>${pres.price}</strong>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-            
-            <div id="calc-mount-point"></div>
-            
-            <div class="app-modal-dock">
-              <button class="btn-dock btn-dock--calc" id="btn-show-calc" style="display: none;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                <span>Volver</span>
-              </button>
-              <a href="https://wa.me/525528462102?text=${encodeURIComponent(product.waMessage)}" class="btn-dock btn-dock--order" style="background: ${product.accentDeep}; flex: 1;" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                WhatsApp
+            ))}
+
+            <div class="spec-frame">
+              <a class="spec-zoom" id="spec-zoom" target="_blank" rel="noopener noreferrer">
+                <img id="spec-img" class="spec-img-full" alt="" width="1545" height="2000" />
+                <span class="spec-zoom__hint">Ampliar etiqueta</span>
               </a>
             </div>
           </div>
-        `;
 
-        // Asignar el nuevo botón de cierre
-        const btnClose = modalBody.querySelector('#btn-close-modal');
-        if (btnClose) {
-          btnClose.addEventListener('click', () => modal?.close());
-        }
-        
-        // Lógica de intercambio (swap) entre imagen y calculadora
-        const btnCalc = document.getElementById('btn-show-calc');
-        const specContent = document.getElementById('spec-content');
-        const calcMount = document.getElementById('calc-mount-point');
+          <!-- Columna derecha: la calculadora real de la página, precargada con este premio.
+               Aquí se monta #calculator-host mientras el modal está abierto. -->
+          <div class="modal-panel modal-panel--calc" id="calc-mount-point" tabindex="-1"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</section>
 
+<script>
+  const modal = document.getElementById('nutrition-modal') as HTMLDialogElement | null;
+  const panels = document.getElementById('modal-panels');
+  const calcMount = document.getElementById('calc-mount-point');
+  const specImg = document.getElementById('spec-img') as HTMLImageElement | null;
+  const specZoom = document.getElementById('spec-zoom') as HTMLAnchorElement | null;
+  const btnClose = document.getElementById('btn-close-modal');
+  const modalProduct = document.querySelector('[data-modal-product]') as HTMLElement | null;
+  const calcHost = document.getElementById('calculator-host');
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.modal-tab'));
 
+  /** Contenedor de origen de la calculadora (sección #calculadora), siempre presente en la página. */
+  const calcHome = () => document.querySelector<HTMLElement>('#calculadora .container');
 
-        const imageTrigger = document.getElementById('image-calc-trigger');
-        
-        // Al dar clic en el texto falso de la imagen, abrir calculadora
-        imageTrigger?.addEventListener('click', () => {
-          if (!calcWrapper || !calcMount || !specContent) return;
-          specContent.style.display = 'none';
-          calcMount.appendChild(calcWrapper);
-          btnCalc.style.display = 'flex'; // Mostrar botón de "Volver"
-        });
+  /** Producto de la tarjeta que se está viendo. */
+  let activeProductId = '';
 
-        // Al dar clic en volver, regresar a la imagen
-        btnCalc?.addEventListener('click', () => {
-          if (!calcWrapper || !calcMount || !specContent) return;
-          document.getElementById('hidden-calc-storage')?.appendChild(calcWrapper);
-          specContent.style.display = 'block';
-          btnCalc.style.display = 'none'; // Ocultar botón de "Volver"
-        });
+  type View = 'calc' | 'spec';
+
+  /** En móvil se ve una vista a la vez; en escritorio conviven las dos columnas. */
+  function setView(view: View) {
+    if (panels) panels.dataset.view = view;
+    tabs.forEach((tab) => {
+      const active = tab.dataset.view === view;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-pressed', String(active));
+    });
+  }
+
+  /**
+   * Sincroniza el premio de la tarjeta abierta en el select de la calculadora.
+   * Reutiliza la lógica del componente disparando su propio evento 'change'.
+   */
+  function syncCalcProduct() {
+    if (!calcHost) return;
+    const select = calcHost.querySelector<HTMLSelectElement>('#calc-product');
+    const option = activeProductId
+      ? calcHost.querySelector<HTMLOptionElement>(`#calc-product option[value="${activeProductId}"]`)
+      : null;
+    if (select && option && !option.disabled && select.value !== activeProductId) {
+      select.value = activeProductId;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  /** El foco cae dentro de la vista recién mostrada (no en <body>). */
+  function focusView(view: View) {
+    if (view === 'calc') {
+      const first = calcHost?.querySelector<HTMLElement>('input, select, button, a[href]');
+      if (first) {
+        first.focus({ preventScroll: true });
+        return;
       }
-      modal?.showModal();
+    }
+    const panel = document.getElementById(view === 'calc' ? 'calc-mount-point' : 'spec-content');
+    panel?.focus({ preventScroll: true });
+  }
+
+  /** El panel abre directo con la calculadora de ese premio: sin dock ni botones intermedios. */
+  function openPanel() {
+    if (modal && !modal.open) modal.showModal();
+    if (calcHost && calcMount) {
+      calcMount.appendChild(calcHost);
+      calcMount.scrollTop = 0;
+      syncCalcProduct();
+    }
+    setView('calc');
+    void panels?.offsetWidth; // asienta el layout antes de mover el foco
+    focusView('calc');
+  }
+
+  /** Al cerrar, la única instancia de la calculadora vuelve a su sección. */
+  function sendCalculatorHome() {
+    if (calcHost) calcHome()?.appendChild(calcHost);
+    setView('calc');
+  }
+
+  /** Trampa de foco: el <dialog> nativo deja escapar el Tab al resto del documento. */
+  modal?.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab' || !modal) return;
+    const focusables = Array.from(
+      modal.querySelectorAll<HTMLElement>('a[href], button, input, select, [tabindex]:not([tabindex="-1"])')
+    ).filter((el) => el.offsetParent !== null && !el.hasAttribute('disabled'));
+    if (focusables.length === 0) return;
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    } else if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    }
+  });
+
+  document.querySelectorAll<HTMLElement>('.product-card-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const { id = '', name = '', spec = '', specW, specH } = btn.dataset;
+      activeProductId = id;
+
+      if (modalProduct) modalProduct.textContent = name;
+      modal?.querySelectorAll<HTMLElement>('[data-detail]').forEach((block) => {
+        block.hidden = block.dataset.detail !== id;
+      });
+      if (specImg) {
+        if (specW) specImg.width = Number(specW);
+        if (specH) specImg.height = Number(specH);
+        specImg.src = spec;
+        specImg.alt = `Etiqueta nutrimental de ${name}`;
+      }
+      // La etiqueta se abre en su tamaño real (fuera del panel) para no obligar a scrollear.
+      if (specZoom) specZoom.href = spec;
+
+      openPanel();
+      // Evita que la página siga desplazándose por detrás del modal (Lenis o scroll nativo).
+      document.dispatchEvent(new CustomEvent('gm:scroll-lock'));
     });
   });
 
+  btnClose?.addEventListener('click', () => modal?.close());
 
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const view: View = tab.dataset.view === 'spec' ? 'spec' : 'calc';
+      setView(view);
+      void panels?.offsetWidth;
+      focusView(view);
+    });
+  });
+
+  // Cerrar con Esc o clic en el fondo también restaura la calculadora y el scroll.
+  modal?.addEventListener('close', () => {
+    sendCalculatorHome();
+    document.dispatchEvent(new CustomEvent('gm:scroll-unlock'));
+  });
 
   modal?.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.close();
-    }
+    if (e.target === modal) modal.close();
   });
 </script>
 
@@ -206,35 +339,26 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
       display: none; /* Ocultar barra de scroll para un look más limpio */
     }
 
-    .product-card-btn {
+    .product-card {
       flex: 0 0 70vw; /* Cada tarjeta ocupa el 70% del ancho de la pantalla */
       scroll-snap-align: center; /* Se ajusta al centro automáticamente */
     }
   }
 
-  /* Tarjeta tipo ticket */
-  .product-card-btn {
+  /* Tarjeta tipo ticket: artículo + botón estirado, para poder tener
+     título y precios como texto real (un <button> sólo admite phrasing content). */
+  .product-card {
     position: relative;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
     background: var(--white);
-    border: none;
     padding: 9px 9px 22px;
-    cursor: pointer;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease, background-color 0.4s ease;
     border-radius: 14px 14px 5px 5px;
     filter: drop-shadow(0 12px 22px rgba(var(--ink-rgb), 0.12));
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
   }
 
-  .product-card-btn::before {
-    content: '';
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    bottom: 13px;
-    border-top: 2px dashed color-mix(in srgb, var(--brown-dark) 18%, transparent);
-  }
-
-  .product-card-btn::after {
+  .product-card::after {
     content: '';
     position: absolute;
     top: 100%;
@@ -244,7 +368,7 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
     background: conic-gradient(from 135deg at 50% 0%, var(--white) 90deg, transparent 0) 0 0 / 16px 8px repeat-x;
   }
 
-  .product-card-btn:hover {
+  .product-card:hover {
     transform: translateY(-10px) scale(1.05);
     filter: drop-shadow(0 22px 34px rgba(50, 16, 28, 0.18));
   }
@@ -256,18 +380,156 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
     border-radius: 8px;
   }
 
+  .product-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px 4px 0;
+  }
 
+  .product-card__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--brown-dark);
+  }
 
-  /* PREMIUM MODAL STYLES */
+  .product-card__claim {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--brown-soft);
+  }
+
+  .product-card__prices {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 2px dashed color-mix(in srgb, var(--brown-dark) 18%, transparent);
+  }
+
+  .product-card__pres {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--brown-soft);
+  }
+
+  .product-card__pres em {
+    font-style: normal;
+    opacity: 0.75;
+  }
+
+  .product-card__pres strong {
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: var(--brown-dark);
+    white-space: nowrap;
+  }
+
+  .product-card__pres.is-popular strong {
+    color: var(--pink);
+  }
+
+  /* Botón estirado: cubre la tarjeta completa y es el único elemento interactivo */
+  .product-card-btn {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  /* ── Resumen del modal: nombre, ingrediente y las dos presentaciones ── */
+  .modal-summary {
+    flex: none; /* no se comprime: la columna reserva su espacio de verdad */
+    padding: 16px 20px 12px;
+    background: var(--cream);
+  }
+
+  .modal-summary__name {
+    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: var(--brown-dark);
+  }
+
+  .modal-summary__claim {
+    margin: 0 0 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--brown-soft);
+  }
+
+  .modal-summary__ingredients {
+    margin: 0 0 12px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--brown-soft);
+  }
+
+  .modal-summary__options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-summary__options a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: var(--white);
+    color: var(--brown-dark);
+    font-size: 0.85rem;
+    font-weight: 800;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  .modal-summary__options a:hover {
+    background: color-mix(in srgb, var(--accent) 22%, var(--white));
+  }
+
+  .modal-summary__options span em {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--brown-soft);
+  }
+
+  .modal-summary__options strong {
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--brown-dark);
+  }
+
+  /* ═══════════ PANEL DE PRODUCTO ═══════════
+     Barra superior + dos columnas (ficha/etiqueta · calculadora).
+     Todo está dimensionado para caber sin desplazar nada: la etiqueta se
+     ajusta al espacio restante y la barra deslizadora no aparece. */
   .nutrition-modal {
     border: none;
     border-radius: var(--radius-xl);
     padding: 0;
-    max-width: 440px; 
-    width: 92%;
+    width: min(980px, 94vw);
+    max-width: 94vw;
+    max-height: 98vh;
     background: transparent;
-    overflow: visible; 
-    margin: auto; 
+    overflow: visible;
+    margin: auto;
   }
 
   .nutrition-modal[open] {
@@ -296,33 +558,76 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
     overflow: hidden;
   }
 
-  /* ── App Modal UI ── */
+  /* Altura definida (no sólo máxima): así la etiqueta puede resolverse con
+     porcentajes y ocupar exactamente el espacio que sobra, sin desplazar nada. */
   .app-modal-wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
-    max-height: 85vh;
+    height: min(92vh, 880px);
+    min-height: 0;
     background: var(--cream);
   }
 
+  /* ── Barra superior ── */
+  .modal-topbar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 12px 12px 20px;
+    background: var(--white);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.07);
+    z-index: 5;
+  }
+
+  .modal-topbar__kicker {
+    margin: 0 0 2px;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--pink);
+  }
+
+  .modal-topbar__title {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--brown-dark);
+  }
+
+  .modal-topbar__title small {
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brown-soft);
+  }
+
   .modal-close-glass {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
+    flex: none;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    background: rgba(20, 10, 13, 0.3);
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(8px);
     color: #fff;
     display: grid;
     place-items: center;
-    z-index: 20;
     transition: transform var(--dur-fast), background var(--dur-fast);
   }
 
   .modal-close-glass:hover {
-    background: rgba(20, 10, 13, 0.5);
+    background: rgba(255, 255, 255, 0.2);
     transform: scale(1.1);
   }
 
@@ -331,116 +636,260 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
     height: 18px;
   }
 
-  .app-modal-scroll {
+  /* ── Pestañas: sólo en móvil ── */
+  .modal-tabs {
+    flex: none;
+    display: none;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--white);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.07);
+  }
+
+  .modal-tab {
+    flex: 1;
+    padding: 9px 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--brown-soft);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+
+  .modal-tab.is-active {
+    background: var(--pink);
+    color: var(--white);
+    box-shadow: 0 6px 14px rgba(var(--pink-rgb), 0.35);
+  }
+
+  /* ── Columnas ── */
+  .modal-panels {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 45%);
+    grid-auto-rows: minmax(0, 1fr);
+    flex: 1 1 auto;
+    min-height: 0;
+    background: var(--cream);
+  }
+
+  .modal-panel {
+    min-width: 0;
+    min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    width: 100%;
-    padding-bottom: 90px; /* Espacio para el dock */
-  }
-  
-  .spec-img-full {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
+    overscroll-behavior: contain;
+    /* Red de seguridad: el contenido está calculado para caber, así que la barra
+       no llega a pintarse; si un viewport muy corto la exigiría, no se ve. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
-  .app-modal-dock {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 1.2rem 1.5rem;
+  .modal-panel::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  .modal-panel--spec {
     display: flex;
-    gap: 0.75rem;
-    background: linear-gradient(to top, var(--cream) 60%, transparent);
-    backdrop-filter: blur(4px);
-    z-index: 10;
+    flex-direction: column;
+    background: var(--cream);
   }
 
-  .btn-dock {
+  /* La etiqueta ocupa exactamente el espacio que sobra: el panel nunca desborda. */
+  .spec-frame {
+    flex: 1 1 auto;
+    min-height: 190px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
-    flex: 1;
-    padding: 0.9rem 0.5rem;
-    border-radius: 14px;
-    font-size: 0.95rem;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    box-shadow: 0 8px 20px rgba(var(--ink-rgb), 0.15);
-    transition: transform var(--dur-fast) var(--ease-bounce), box-shadow var(--dur-fast);
+    padding: 2px 20px 20px;
   }
 
-  .btn-dock:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(var(--ink-rgb), 0.2);
-  }
-
-  .btn-dock svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .btn-dock--calc {
-    background: var(--white);
-    color: var(--brown-dark);
-    flex: 0.8;
-  }
-
-  .btn-dock--order {
-    color: #fff;
-    flex: 1.2;
+  .spec-zoom {
     position: relative;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    max-width: 100%;
   }
 
-  /* Shimmer effect for primary button */
-  .btn-dock--order::after {
-    content: '';
+  .spec-img-full {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 12px;
+    box-shadow: 0 16px 34px rgba(var(--ink-rgb), 0.4);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .spec-zoom:hover .spec-img-full {
+    transform: scale(1.02);
+  }
+
+  .spec-zoom__hint {
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
-    transform: skewX(-20deg);
-    animation: shimmer 3s infinite;
+    right: 10px;
+    bottom: 10px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: rgba(20, 10, 13, 0.78);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    pointer-events: none;
   }
 
-  @keyframes shimmer {
-    0% { left: -100%; }
-    20% { left: 200%; }
-    100% { left: 200%; }
+  /* Aquí vive la calculadora de la página mientras el panel está abierto */
+  .modal-panel--calc {
+    background: var(--white);
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.07);
   }
 
-  .modal-calc-wrapper {
-    background: transparent;
-    padding: 0 0 90px 0; /* Padding inferior para el dock */
-    height: 100%;
-    overflow-y: auto;
-  }
-  
-  /* Override calculator internal background to fit the dark theme naturally */
-  .modal-calc-wrapper :global(.portion-calculator) {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
+  .modal-panel--calc :global(.package-calc) {
+    max-width: 100%;
+    box-shadow: none;
+    border-radius: 0;
   }
 
-  .invisible-calc-trigger {
-    position: absolute;
-    inset: 0; /* Cubre absolutamente toda la imagen para no fallar */
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    cursor: pointer;
-    z-index: 10;
-  }
-  
-  .invisible-calc-trigger:hover {
-    background: rgba(255, 255, 255, 0.05); /* Feedback visual muy sutil */
+  /* Dentro del panel no hay dock: el pedido se hace con las presentaciones de la ficha. */
+  .modal-panel--calc :global(.calc-cta) {
+    display: none;
   }
 
+  /* ── Pantallas bajas: el empaque se recorta para que el panel quepa entero ── */
+  @media (max-height: 800px) {
+    .modal-panel--calc :global(.package-calc__header) {
+      height: 44px;
+    }
+
+    .modal-panel--calc :global(.package-calc__logo-container) {
+      top: 2px;
+      width: 44px;
+    }
+
+    .modal-panel--calc :global(.package-calc__wave) {
+      display: none;
+    }
+
+    .modal-panel--calc :global(.package-calc__content) {
+      padding: 16px 20px 12px;
+    }
+
+    .modal-panel--calc :global(.package-calc__title) {
+      font-size: 1.25rem;
+    }
+
+    .modal-panel--calc :global(.package-calc__window) {
+      padding: 12px;
+      gap: 10px;
+    }
+
+    .modal-panel--calc :global(.package-calc__footer) {
+      padding: 10px 20px 12px;
+    }
+
+    .modal-panel--calc :global(.footer-note) {
+      display: none;
+    }
+  }
+
+  /* ── Móvil: una vista a la vez, sin barras ── */
+  @media (max-width: 860px) {
+    .modal-tabs {
+      display: flex;
+    }
+
+    .modal-panels {
+      grid-template-columns: 1fr;
+    }
+
+    .modal-panels[data-view='calc'] .modal-panel--spec {
+      display: none;
+    }
+
+    .modal-panels[data-view='spec'] .modal-panel--calc {
+      display: none;
+      box-shadow: none;
+    }
+
+    .spec-frame {
+      padding: 2px 16px 16px;
+    }
+
+    /* Móvil: el panel ocupa casi toda la pantalla y el empaque se estrecha
+       para que el resultado quede visible sin desplazar nada. */
+    .app-modal-wrapper {
+      height: min(96vh, 880px);
+    }
+
+    .modal-topbar {
+      padding: 8px 8px 8px 14px;
+    }
+
+    .modal-tabs {
+      padding: 6px 10px;
+    }
+
+    .modal-tab {
+      padding: 7px 8px;
+      font-size: 0.75rem;
+    }
+
+    .modal-panel--calc :global(.package-calc__title) {
+      font-size: 1.15rem;
+    }
+
+    .modal-panel--calc :global(.package-calc__subtitle) {
+      display: none;
+    }
+
+    .modal-panel--calc :global(.package-calc__content) {
+      padding: 14px 16px 10px;
+    }
+
+    .modal-panel--calc :global(.package-calc__window) {
+      padding: 10px;
+      gap: 8px;
+    }
+
+    .modal-panel--calc :global(.package-calc__footer) {
+      padding: 8px 16px 10px;
+    }
+
+    .modal-panel--calc :global(.toggle-btn span) {
+      padding: 7px 4px;
+    }
+  }
+
+  /* ── Viewports muy cortos (móvil de 568px): recorte final para no desplazar ── */
+  @media (max-height: 600px) {
+    .modal-summary {
+      padding: 12px 14px 10px;
+    }
+
+    .spec-frame {
+      min-height: 150px;
+    }
+
+    .modal-panel--calc :global(.package-calc__window) {
+      padding: 8px;
+    }
+
+    .modal-panel--calc :global(.package-calc__footer) {
+      padding: 6px 14px 8px;
+    }
+
+    .modal-panel--calc :global(.yellow-pill) {
+      padding: 4px 14px;
+    }
+  }
 </style>

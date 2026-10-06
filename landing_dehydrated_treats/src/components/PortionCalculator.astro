@@ -1,5 +1,5 @@
 ---
-import { SITE, products } from '../data/products';
+import { SITE, products, waLink } from '../data/products';
 import logoMain from '../assets/logos/logo-main.png';
 
 const safeProducts = products.map((p) => ({
@@ -14,7 +14,7 @@ const safeProducts = products.map((p) => ({
 const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
 ---
 
-<div class="package-calculator-wrapper" id="calculadora">
+<div class="package-calculator-wrapper">
   <div class="package-calc" data-calculator-card>
     
     <!-- ═══ Decoración Superior (Estilo Empaque) ═══ -->
@@ -39,7 +39,8 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
         
         <!-- 1. Especie -->
         <div class="calc-row">
-          <div class="toggle-group">
+          <fieldset class="toggle-group">
+            <legend class="sr-only">Especie de tu mascota</legend>
             <label class="toggle-btn">
               <input type="radio" name="pet_type" value="dog" />
               <span>GUAW (PERRO)</span>
@@ -48,7 +49,7 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
               <input type="radio" name="pet_type" value="cat" />
               <span>MIAW (GATO)</span>
             </label>
-          </div>
+          </fieldset>
         </div>
 
         <!-- 2. Peso (Slider) -->
@@ -61,8 +62,9 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
               type="range" 
               class="weight-slider" 
               data-weight-slider 
+              aria-label="Peso de tu mascota en kilos"
               min="1" 
-              max="40" 
+              max="80" 
               step="1" 
               value="15" 
             />
@@ -72,8 +74,8 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
         <!-- 3. Etapa y Salud -->
         <div class="calc-row grid-2">
           <div class="compact-field">
-            <label>ETAPA</label>
-            <select name="pet_age" class="compact-select">
+            <label for="pet-age">ETAPA</label>
+            <select id="pet-age" name="pet_age" class="compact-select">
               <option value="" disabled selected>Selecciona...</option>
               <option value="puppy">Cachorro/Gatito</option>
               <option value="adult">Adulto/Senior</option>
@@ -81,8 +83,8 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
             </select>
           </div>
           <div class="compact-field">
-            <label>SALUD</label>
-            <select name="pet_sick" class="compact-select">
+            <label for="pet-health">SALUD</label>
+            <select id="pet-health" name="pet_sick" class="compact-select">
               <option value="" disabled selected>Selecciona...</option>
               <option value="no">Sano</option>
               <option value="yes">Dieta especial</option>
@@ -93,21 +95,21 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
         <!-- 4. Premio -->
         <div class="calc-row">
           <div class="compact-field">
-            <label>ELIGE EL SNACK</label>
-            <select name="calc_product" class="compact-select">
+            <label for="calc-product">ELIGE EL SNACK</label>
+            <select id="calc-product" name="calc_product" class="compact-select">
               <option value="" disabled selected>Selecciona el premio...</option>
               {safeProducts.map(p => (
                 <option value={p.id}>{p.name.toUpperCase()}</option>
               ))}
             </select>
-            <p class="error-text" data-orejas-note hidden>Orejas exclusivas para perros.</p>
+            <p class="error-text" data-orejas-note role="status" hidden>Orejas exclusivas para perros.</p>
           </div>
         </div>
 
       </div>
 
       <!-- Alerta de salud -->
-      <div class="health-alert" data-state-block="restricted" style="display: none;">
+      <div class="health-alert" data-state-block="restricted" role="status" style="display: none;">
         <strong>¡Consulta al veterinario!</strong> Por su etapa o salud, pide asesoría antes de darle premios.
       </div>
 
@@ -125,9 +127,20 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
         <!-- Píldora Amarilla de Resultado -->
         <div class="yellow-pill">
           <span class="yellow-pill__label">PORCIÓN DIARIA</span>
-          <span class="yellow-pill__value"><span data-result-text>--</span> <small data-result-unit></small></span>
+          <span class="yellow-pill__value" aria-live="polite" aria-atomic="true"><span data-result-text>--</span> <small data-result-unit></small></span>
         </div>
       </div>
+
+      <!-- Salida natural de la calculadora: su propio pedido, con el premio elegido -->
+      <a
+        class="calc-cta"
+        data-calc-cta
+        href={waLink('¡Hola! Quiero pedir premios deshidratados')}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Pedir por WhatsApp
+      </a>
     </div>
   </div>
 </div>
@@ -139,7 +152,7 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
   .package-calculator-wrapper {
     display: flex;
     justify-content: center;
-    padding: 2rem 1rem;
+    padding: 0;
     background: transparent;
   }
 
@@ -171,7 +184,7 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
   .package-calc__header {
     position: relative;
     background: #FFB5C6; /* Rosa del empaque */
-    height: 110px;
+    height: 92px;
   }
 
   .package-calc__wave {
@@ -186,10 +199,10 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
 
   .package-calc__logo-container {
     position: absolute;
-    top: 20px;
+    top: 12px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
+    width: 86px;
     z-index: 2;
   }
 
@@ -201,7 +214,7 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
 
   /* ── Contenido ── */
   .package-calc__content {
-    padding: 40px 24px 20px;
+    padding: 26px 24px 18px;
     text-align: center;
   }
 
@@ -209,7 +222,8 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
     font-family: var(--font-body);
     font-weight: 900;
     font-size: 1.6rem;
-    color: #D33B40; /* Rojo del título */
+    /* El rojo del empaque (#D33B40) sólo daba 4.03:1 sobre la tarjeta oscura */
+    color: var(--pink);
     margin: 0;
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -218,19 +232,19 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
   .package-calc__subtitle {
     font-weight: 800;
     font-size: 0.75rem;
-    color: #D33B40;
+    color: var(--pink);
     letter-spacing: 0.1em;
-    margin: 6px 0 20px;
+    margin: 4px 0 16px;
   }
 
   /* ── Ventana Rosa ── */
   .package-calc__window {
     background: #FCE4E9; /* Fondo rosa claro */
     border-radius: 20px;
-    padding: 20px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 13px;
   }
 
   .calc-row {
@@ -247,9 +261,13 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
   .toggle-group {
     display: flex;
     gap: 8px;
-    background: var(--white);
+    /* Riel claro: con var(--white) (oscuro) las opciones sin elegir quedaban
+       en 2.16:1 y eran prácticamente invisibles. */
+    background: #FFFFFF;
     padding: 4px;
+    border: 0; /* reset de fieldset */
     border-radius: 12px;
+    min-inline-size: 0;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
   }
 
@@ -277,8 +295,14 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
 
   .toggle-btn input:checked + span {
     background: #FFB5C6;
-    color: #FFFFFF;
+    color: #8C2332;
     box-shadow: 0 2px 6px rgba(255, 181, 198, 0.5);
+  }
+
+  /* El radio está oculto: sin esto, navegar con teclado es a ciegas. */
+  .toggle-btn input:focus-visible + span {
+    outline: 3px solid var(--pink);
+    outline-offset: 2px;
   }
 
   /* ── Slider ── */
@@ -302,6 +326,7 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
   .weight-slider {
     width: 100%;
     -webkit-appearance: none;
+    appearance: none;
     height: 8px;
     background: var(--white);
     border-radius: 4px;
@@ -315,6 +340,22 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
     height: 22px;
     border-radius: 50%;
     background: #FFE200; /* Amarillo del empaque */
+    border: 2px solid var(--white);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+  }
+
+  /* Firefox: la pista transparente deja ver el degradado de progreso del JS */
+  .weight-slider::-moz-range-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  .weight-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #FFE200;
     border: 2px solid var(--white);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     cursor: pointer;
@@ -357,7 +398,7 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
   }
 
   .health-alert {
-    margin-top: 16px;
+    margin-top: 12px;
     background: #FFF3CD;
     color: #856404;
     padding: 10px;
@@ -368,16 +409,16 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
 
   /* ── Footer ── */
   .package-calc__footer {
-    padding: 20px 24px;
+    padding: 14px 24px 16px;
     background: var(--white);
   }
 
   .footer-note {
     font-weight: 800;
     font-size: 0.7rem;
-    color: #D33B40;
+    color: var(--pink);
     letter-spacing: 0.05em;
-    margin: 0 0 16px;
+    margin: 0 0 12px;
     text-align: center;
   }
 
@@ -410,11 +451,12 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
     transform: scale(1.05);
   }
 
+  /* Sobre el amarillo #FFE200, el rojo del empaque daba 3.61:1 */
   .yellow-pill__label {
     display: block;
     font-weight: 800;
     font-size: 0.6rem;
-    color: #D33B40;
+    color: #8C2332;
     margin-bottom: 2px;
   }
 
@@ -422,12 +464,33 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
     display: block;
     font-weight: 900;
     font-size: 1.1rem;
-    color: #D33B40;
+    color: #8C2332;
     line-height: 1;
   }
   
   .yellow-pill__value small {
     font-size: 0.7rem;
+  }
+
+  .calc-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    padding: 13px 16px;
+    border-radius: 14px;
+    background: var(--pink);
+    color: var(--white);
+    font-weight: 800;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 20px rgba(var(--pink-rgb), 0.35);
+    transition: transform var(--dur-fast) var(--ease-bounce), background var(--dur-fast) var(--ease-out);
+  }
+
+  .calc-cta:hover {
+    background: var(--pink-deep);
+    transform: translateY(-2px);
   }
 
 </style>
@@ -448,6 +511,7 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
     const yellowPill = document.querySelector('.yellow-pill') as HTMLElement;
     const restrictedAlert = document.querySelector('[data-state-block="restricted"]') as HTMLElement;
     const orejasNote = document.querySelector('[data-orejas-note]') as HTMLElement;
+    const cta = document.querySelector('[data-calc-cta]') as HTMLAnchorElement | null;
 
     const state = { pet: '', age: '', sick: '', product: '', weight: 15 };
 
@@ -472,6 +536,15 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
       if(orejasNote) orejasNote.hidden = state.pet !== 'cat';
 
       state.product = productSelect.value;
+
+      // El botón de pedido sigue al premio elegido (o pide en general si no hay ninguno).
+      if (cta) {
+        const chosen = products.find((p: any) => p.id === state.product);
+        const message = chosen
+          ? `¡Hola! Quiero pedir ${chosen.name} deshidratados`
+          : '¡Hola! Quiero pedir premios deshidratados';
+        cta.href = `https://wa.me/${payload.whatsapp}?text=${encodeURIComponent(message)}`;
+      }
       
       const isRestricted = (state.age === 'puppy' || state.age === 'unknown' || state.sick === 'yes');
       const isReady = (state.pet && state.age && state.sick && state.product);
@@ -518,7 +591,8 @@ const payload = { whatsapp: SITE.whatsapp, products: safeProducts };
     slider.addEventListener('input', () => {
       state.weight = Number(slider.value);
       weightVal.textContent = String(state.weight);
-      if(plusSpan) plusSpan.hidden = state.weight < 40;
+      // El "+" avisa que el rango sigue: sólo cuando el peso toca el máximo.
+      if (plusSpan) plusSpan.hidden = state.weight < Number(slider.max);
       sync();
     });
 

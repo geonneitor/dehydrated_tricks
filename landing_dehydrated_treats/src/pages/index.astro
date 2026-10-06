@@ -4,9 +4,15 @@ import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import Marquee from '../components/Marquee.astro';
 import ProductCarousel from '../components/ProductCarousel.astro';
+import PortionCalculator from '../components/PortionCalculator.astro';
 import Recommendations from '../components/Recommendations.astro';
-// PortionCalculator is now rendered inside ProductCarousel
 import Footer from '../components/Footer.astro';
+
+const steps = [
+  { title: 'Elige su especie', desc: 'Perro o gato: la ración cambia con su tamaño.' },
+  { title: 'Ajusta su peso', desc: 'De 1 a 80 kg, con una sola regla deslizante.' },
+  { title: 'Escoge el premio', desc: 'Cada snack tiene su propia medida diaria.' },
+];
 ---
 
 <Layout>
@@ -15,8 +21,147 @@ import Footer from '../components/Footer.astro';
     <Hero />
     <Marquee />
     <ProductCarousel />
+
+    <!--
+      La calculadora vive aquí, visible y anclada (#calculadora) para que el CTA
+      principal del Hero tenga destino. El modal de producto mueve este mismo
+      nodo (#calculator-host) mientras está abierto y lo devuelve al cerrarse:
+      una sola instancia, sin IDs duplicados y sin perder el estado del usuario.
+      La sección es de dos columnas para que la tarjeta no deje huecos vacíos
+      a los lados en pantallas anchas.
+    -->
+    <section class="calculator-section" id="calculadora" aria-labelledby="calculator-section-title">
+      <div class="container calculator-section__grid">
+        <div class="calculator-section__copy">
+          <span class="kicker"><span class="kicker-star">✦</span> Sin matemáticas de más</span>
+          <h2 class="t-title" id="calculator-section-title">
+            Calcula <span class="accent-script">su porción exacta.</span>
+          </h2>
+          <p class="calculator-section__desc">
+            Elige mascota, peso y premio: te decimos cuánto darle al día según su etapa y su salud.
+          </p>
+
+          <ol class="calculator-steps">
+            {steps.map((step, i) => (
+              <li class="calculator-steps__item">
+                <span class="calculator-steps__num" aria-hidden="true">{i + 1}</span>
+                <span class="calculator-steps__text">
+                  <strong>{step.title}</strong>
+                  <span>{step.desc}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div id="calculator-host">
+          <PortionCalculator />
+        </div>
+      </div>
+    </section>
+
     <Recommendations />
-    <!-- PortionCalculator renderizado dentro de ProductCarousel -->
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .calculator-section {
+    padding-block: var(--space-5) var(--space-4);
+    background: var(--cream);
+  }
+
+  /* Dos columnas: el copy ocupa el resto del contenedor y la tarjeta vive en una
+     columna fija, así no sobra espacio a los lados en desktop. */
+  .calculator-section__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+
+  .calculator-section__copy h2 {
+    color: var(--brown-dark);
+    margin: 0;
+  }
+
+  .calculator-section__desc {
+    margin: 12px 0 0;
+    max-width: 34rem;
+    color: var(--brown-soft);
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    font-weight: 600;
+  }
+
+  .calculator-steps {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    max-width: 32rem;
+  }
+
+  .calculator-steps__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 13px 16px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  .calculator-steps__num {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(var(--pink-rgb), 0.16);
+    color: var(--pink);
+    font-weight: 900;
+    font-size: 0.9rem;
+    font-family: var(--font-display);
+  }
+
+  .calculator-steps__text {
+    display: block;
+  }
+
+  .calculator-steps__text strong {
+    display: block;
+    color: var(--brown-dark);
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .calculator-steps__text span {
+    color: var(--brown-soft);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* Breakpoint oficial del sistema: tablet ≤1023 · desktop ≥1024 */
+  @media (max-width: 1023px) {
+    .calculator-section__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .calculator-section__copy {
+      text-align: center;
+    }
+
+    .calculator-section__desc {
+      margin-inline: auto;
+    }
+
+    .calculator-steps {
+      margin-inline: auto;
+      text-align: left;
+    }
+  }
+</style>

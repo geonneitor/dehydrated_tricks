@@ -21,7 +21,7 @@ const ogImageURL = Astro.site ? new URL(ogImage.src, Astro.site).href : ogImage.
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#FFF8EF" />
+    <meta name="theme-color" content="#140A0D" />
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -52,22 +52,72 @@ const ogImageURL = Astro.site ? new URL(ogImage.src, Astro.site).href : ogImage.
     <script>
       import Lenis from 'lenis';
 
-      // 1. Lenis: Scroll Mantequilla
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-      });
+      // 1. Lenis: Scroll Mantequilla (no se inicializa si el usuario pide
+      //    movimiento reducido: ahí el scroll nativo es el correcto).
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const lenis = prefersReducedMotion
+        ? null
+        : new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+          });
 
-      function raf(time: number) {
-        lenis.raf(time);
+      if (lenis) {
+        const instance = lenis;
+        const raf = (time: number) => {
+          instance.raf(time);
+          requestAnimationFrame(raf);
+        };
         requestAnimationFrame(raf);
       }
-      requestAnimationFrame(raf);
 
-      // 2. Easter Egg Sensorial: Huellitas
+      // 2. Anclajes internos: Lenis no atiende los href="#seccion" por sí solo.
+      //    Respeta el scroll-margin-top de cada sección, así el navbar fijo no tapa el título.
+      document.addEventListener('click', (event) => {
+        const node = event.target as HTMLElement | null;
+        const link = node?.closest('a[href^="#"]');
+        if (!(link instanceof HTMLAnchorElement)) return;
+
+        const hash = link.getAttribute('href');
+        if (!hash || hash === '#') return;
+
+        const target = document.getElementById(hash.slice(1));
+        if (!target) return;
+
+        event.preventDefault();
+        if (lenis) lenis.scrollTo(target);
+        else target.scrollIntoView({ block: 'start' });
+        history.pushState(null, '', hash);
+      });
+
+      // 3. Los diálogos (calculadora en modal) bloquean el scroll de fondo.
+      //    Con Lenis hay que detenerlo explícitamente; sin él, el scroll es nativo.
+      let releaseNativeLock = () => {};
+      document.addEventListener('gm:scroll-lock', () => {
+        if (lenis) {
+          lenis.stop();
+          return;
+        }
+        const root = document.documentElement;
+        const previous = root.style.overflow;
+        root.style.overflow = 'hidden';
+        releaseNativeLock = () => {
+          root.style.overflow = previous;
+        };
+      });
+
+      document.addEventListener('gm:scroll-unlock', () => {
+        if (lenis) {
+          lenis.start();
+          return;
+        }
+        releaseNativeLock();
+      });
+
+      // 4. Easter Egg Sensorial: Huellitas
       document.addEventListener('click', (e) => {
         // No mostrar si hacen clic en un elemento interactivo principal
         if ((e.target as HTMLElement).closest('a, button')) return;
