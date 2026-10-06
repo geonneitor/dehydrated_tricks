@@ -32,6 +32,11 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
       </p>
     </header>
 
+    <!-- Aviso de gesto: en móvil la fila es deslizable y cada tarjeta abre el panel -->
+    <p class="swipe-hint" aria-hidden="true">
+      Toca un premio · <strong>desliza</strong> para verlos todos <span class="swipe-hint__arrow">→</span>
+    </p>
+
     <div class="products-row">
       {products.map((p, i) => (
         <article class="product-card">
@@ -42,6 +47,9 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
             width={cardImages[i].width}
             height={cardImages[i].height}
           />
+
+          <!-- Sólo visual: el botón estirado de abajo ya announce "Ver etiqueta..." -->
+          <span class="product-card__hint" aria-hidden="true">Toca para ver la etiqueta</span>
 
           <!-- Texto real en el HTML: indexable y visible sin JavaScript -->
           <div class="product-card__body">
@@ -319,6 +327,17 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
     width: 100%;
   }
 
+  /* Avisos de gesto: ocultos fuera del móvil, donde la fila no es deslizable */
+  .swipe-hint,
+  .product-card__hint {
+    display: none;
+  }
+
+  @keyframes swipe-nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(6px); }
+  }
+
   @media (max-width: 600px) {
     /* Mejora ergonómica: Carrusel deslizable horizontal en móviles */
     .products-row {
@@ -333,6 +352,9 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
       margin-inline: -5%; /* Sangría negativa para que llegue al borde de la pantalla */
       padding-inline: 5%; /* Espaciado inicial */
       gap: 1rem;
+      /* El borde derecho se desvanece: se ve que la fila sigue más allá */
+      -webkit-mask-image: linear-gradient(to right, #000 86%, transparent 100%);
+      mask-image: linear-gradient(to right, #000 86%, transparent 100%);
     }
 
     .products-row::-webkit-scrollbar {
@@ -342,6 +364,54 @@ const specImages = [spec1, spec2, spec3, spec4, spec5];
     .product-card {
       flex: 0 0 70vw; /* Cada tarjeta ocupa el 70% del ancho de la pantalla */
       scroll-snap-align: center; /* Se ajusta al centro automáticamente */
+    }
+
+    /* La fila es deslizable y las tarjetas abren el detalle: se dice explícitamente */
+    .swipe-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: -6px 0 16px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--brown-soft);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .swipe-hint strong {
+      color: var(--brown-dark);
+    }
+
+    .swipe-hint__arrow {
+      color: var(--pink);
+      font-size: 1em;
+      animation: swipe-nudge 1.6s ease-in-out infinite;
+    }
+
+    .product-card__hint {
+      display: block;
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 1; /* por debajo del botón estirado (z-index: 2), que sigue recibiendo el clic */
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(20, 10, 13, 0.72);
+      backdrop-filter: blur(6px);
+      color: #fff;
+      text-align: center;
+      font-size: 0.66rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      pointer-events: none;
     }
   }
 

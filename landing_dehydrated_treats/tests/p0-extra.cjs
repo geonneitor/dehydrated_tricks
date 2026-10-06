@@ -123,6 +123,32 @@ async function anchorLands(page, linkSelector, targetId, label, expectedTop = NA
   await mobile.waitForTimeout(1600);
   ok('En móvil el CTA lleva a la calculadora',
     await mobile.evaluate(() => Math.abs(document.getElementById('calculadora').getBoundingClientRect().top - 88) <= 12));
+
+  // Avisos de gesto: la fila es deslizable y cada tarjeta abre el panel
+  await mobile.evaluate(() => document.getElementById('productos').scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await mobile.waitForTimeout(300);
+  const gestures = await mobile.evaluate(() => {
+    const hint = document.querySelector('.swipe-hint');
+    const chips = Array.from(document.querySelectorAll('.product-card__hint'));
+    const row = document.querySelector('.products-row');
+    const first = chips[0]?.getBoundingClientRect();
+    return {
+      hint: hint.textContent.replace(/\s+/g, ' ').trim(),
+      hintVisible: hint.offsetParent !== null && getComputedStyle(hint).display !== 'none',
+      chips: chips.length,
+      chipsVisible: chips.filter((c) => c.offsetParent !== null).length,
+      chipInView: !!first && first.top >= 0 && first.bottom <= window.innerHeight,
+      scrollable: row.scrollWidth > row.clientWidth + 20,
+      rowScroll: `${row.scrollWidth}/${row.clientWidth}`,
+      pageScrollX: (window.scrollTo(600, 0), window.scrollX),
+    };
+  });
+  ok('Los avisos de gesto se ven en móvil (desliza + toca)',
+    gestures.hintVisible && gestures.chips === 5 && gestures.chipsVisible === 5 && gestures.chipInView,
+    `"${gestures.hint}", chips=${gestures.chipsVisible}/${gestures.chips}`);
+  ok('La fila de productos es deslizable y la página no se desplaza en horizontal',
+    gestures.scrollable && gestures.pageScrollX === 0, `fila=${gestures.rowScroll}`);
+
   await mobile.locator('.product-card-btn').first().click();
   await mobile.waitForTimeout(600);
   const mobileCalc = await mobile.evaluate(() => {

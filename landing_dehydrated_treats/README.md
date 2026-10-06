@@ -8,7 +8,7 @@ Construida con [Astro](https://astro.build) — cero JS de framework en el clien
 
 - **Hero** con la mascota recortada sobre un halo rosa que le da contraste de fondo, el logotipo flotando debajo, croquetas flotantes y blobs animados
 - **Marquee** infinito con mensajes de marca
-- **Tiendita** (`#productos`): rejilla de tarjetas con nombre, proteína y precios como **texto real** (visibles sin JS); al tocar una se abre el panel de producto
+- **Tiendita** (`#productos`): rejilla de tarjetas con nombre, proteína y precios como **texto real** (visibles sin JS); al tocar una se abre el panel de producto. En móvil la fila es deslizable y se avisa del gesto con una pista «desliza», un degradado en el borde derecho y un chip «toca para ver la etiqueta» encima de cada foto
 - **Panel de producto**: barra superior con el nombre del premio; a la izquierda la ficha (ingrediente + las 2 presentaciones con precio → WhatsApp) y la etiqueta nutrimental; a la derecha la **calculadora ya montada y precargada con ese premio**. No hay dock de botones y **no hay barra deslizadora**: la etiqueta se escala al espacio que sobra y la pista «Ampliar etiqueta» la abre a tamaño real en otra pestaña si hace falta leerla. En móvil se convierte en pestañas («Tu porción» / «Etiqueta»)
 - **Calculadora de porciones** en sección propia a dos columnas (`#calculadora`): guía paso a paso + tarjeta, para que no sobre espacio lateral en pantallas anchas
 - **La Guía** (`#tips`) con recomendaciones y **Footer** con datos de contacto y FAB de WhatsApp
