@@ -1,7 +1,7 @@
 ---
 import kibbleHeart from '../assets/kibble/kibble-heart.png';
 import kibbleFlower from '../assets/kibble/kibble-flower.png';
-import mascotHero from '../assets/mascot/mascot-hero.webp';
+import logoMain from '../assets/logos/logo-main.png';
 ---
 
 <section class="hero-sugarmelon" id="inicio">
@@ -52,12 +52,11 @@ import mascotHero from '../assets/mascot/mascot-hero.webp';
       <div class="tilt-scene" data-tilt-scene>
         <div class="tilt-shadow" aria-hidden="true"></div>
         <img
-          src={mascotHero.src}
-          alt="Mascota de Guaw & Miaw"
-          class="tilt-mascot"
-          data-tilt-card
-          width={mascotHero.width}
-          height={mascotHero.height}
+          src={logoMain.src}
+          alt="Logotipo de Guaw & Miaw"
+          class="animated-logo"
+          width="300"
+          height="300"
           loading="eager"
           fetchpriority="high"
           decoding="async"
@@ -197,11 +196,24 @@ import mascotHero from '../assets/mascot/mascot-hero.webp';
     50% { transform: translateY(-15px); }
   }
 
-  .tilt-mascot {
+  .animated-logo {
     display: block;
-    width: 100%;
+    width: 85%;
+    max-width: 320px;
     height: auto;
-    filter: drop-shadow(0 26px 30px rgba(var(--ink-rgb), 0.22));
+    margin: 0 auto;
+    filter: drop-shadow(0 26px 30px rgba(var(--ink-rgb), 0.15));
+    animation: happy-hop 4s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+    transform-origin: bottom center;
+  }
+
+  /* Animación juguetona de saltito alegre */
+  @keyframes happy-hop {
+    0%, 100% { transform: scale(1) translateY(0) rotate(0); }
+    10% { transform: scale(1.05, 0.95) translateY(5px) rotate(0); }
+    30% { transform: scale(0.95, 1.05) translateY(-25px) rotate(-3deg); }
+    40% { transform: scale(1.02, 0.98) translateY(0) rotate(2deg); }
+    50% { transform: scale(1) translateY(0) rotate(0); }
   }
 
   /* Sombra debajo de la mascota */

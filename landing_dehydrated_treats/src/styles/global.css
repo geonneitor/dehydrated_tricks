@@ -34,11 +34,14 @@
 
   /* Escala de espaciado */
   --space-1: 0.5rem;
-  --space-2: clamp(0.75rem, 2vw, 1rem);
-  --space-3: clamp(1rem, 3vw, 1.5rem);
-  --space-4: clamp(1.5rem, 4vw, 2.5rem);
-  --space-5: clamp(2rem, 5vw, 4rem);
-  --space-6: clamp(3rem, 7vw, 6.5rem);
+  --space-2: clamp(0.75rem, 2vw, 1.25rem);
+  --space-3: clamp(1.25rem, 3vw, 1.75rem);
+  --space-4: clamp(1.75rem, 4vw, 2.75rem);
+  --space-5: clamp(2.5rem, 5vw, 4.5rem);
+  --space-6: clamp(3.5rem, 7vw, 7rem);
+
+  /* Margen extra para dispositivos móviles */
+  --mobile-pad: clamp(1.5rem, 5vw, 2rem);
 
   /* Radios */
   --radius-md: 0.75rem;
@@ -110,7 +113,7 @@ button {
 }
 
 .container {
-  width: min(var(--container), 92vw);
+  width: min(var(--container), 90vw); /* Más margen en móviles */
   margin-inline: auto;
 }
 
