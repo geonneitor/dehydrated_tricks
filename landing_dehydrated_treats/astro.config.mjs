@@ -7,6 +7,11 @@ import spotlightjs from '@spotlightjs/astro';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://dehydrated-tricks.vercel.app',
+  vite: {
+    server: {
+      allowedHosts: true,
+    },
+  },
   // Order matters here! `sentry()` should come before `spotlightjs()`
   integrations: [
     sitemap(),

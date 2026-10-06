@@ -5,7 +5,7 @@ import Hero from '../components/Hero.astro';
 import Marquee from '../components/Marquee.astro';
 import ProductCarousel from '../components/ProductCarousel.astro';
 import Recommendations from '../components/Recommendations.astro';
-import PortionCalculator from '../components/PortionCalculator.astro';
+// PortionCalculator is now rendered inside ProductCarousel
 import Footer from '../components/Footer.astro';
 ---
 
@@ -16,7 +16,7 @@ import Footer from '../components/Footer.astro';
     <Marquee />
     <ProductCarousel />
     <Recommendations />
-    <PortionCalculator />
+    <!-- PortionCalculator renderizado dentro de ProductCarousel -->
   </main>
   <Footer />
 </Layout>

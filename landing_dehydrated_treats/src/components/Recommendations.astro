@@ -1,59 +1,93 @@
 ---
-// Recommendations.astro
-// Tips en grid bento compacto: las 5 tarjetas llenan el ancho del contenedor.
-// Cada tarjeta usa un acento del catálogo de productos para mantener la identidad.
-const tips = [
+import mascotPlaying from '../assets/mascot/mascot-playing.png';
+import mascotMegaphone from '../assets/mascot/mascot-megaphone.png';
+import kibbleFlower from '../assets/kibble/kibble-flower.png';
+import kibbleHeart from '../assets/kibble/kibble-heart.png';
+
+const content = [
   {
-    icon: '💡',
-    tag: 'Tip nutricional',
-    text: 'Los premios deshidratados conservan los nutrientes intactos: un solo premio equivale a una porción de carne fresca más grande.',
+    tag: 'Tip Nutricional',
+    title: 'Nutrientes intactos.',
+    text: 'Al deshidratar a baja temperatura, cada premio conserva su valor original.',
+    review: '«Increíble. Mi perrita dejó de tirar tanto pelo desde que le doy el hígado. Se nota que es carne de verdad, nada que ver con los empaques del súper.»',
+    author: '— Ana C.',
     accent: '#FF3D5E',
   },
   {
-    icon: '🥩',
     tag: 'Entrenamiento',
-    text: 'Para perros de razas pequeñas, parte las orejas o mollejas en trozos más chicos. Son excelentes para entrenamiento.',
+    title: 'El aliado perfecto.',
+    text: 'Para razas pequeñas, puedes partir fácilmente las mollejas u orejas en trozos.',
+    review: '«Son mágicos para entrenar. Rompo los charales en pedacitos y mi gato hace literalmente lo que sea por ellos. Súper recomendados.»',
+    author: '— Roberto M.',
     accent: '#8C2332',
   },
   {
-    icon: '💧',
-    tag: 'Hidratación',
-    text: 'Mantén siempre agua fresca a su disposición cuando le des premios deshidratados. ¡Les dará mucha sed!',
+    tag: 'Tip Práctico',
+    title: 'Agua siempre lista.',
+    text: 'Los premios aumentan su sed, dales agüita fresca. No necesitan refrigeración.',
+    review: '«Súper prácticos. Los tengo en la alacena hace semanas y siguen igual de crujientes. A mis huskies les encantan las orejas de cerdo.»',
+    author: '— Diana V.',
     accent: '#1B6E8C',
-  },
-  {
-    icon: '📦',
-    tag: 'Almacenaje',
-    text: 'Conserva los empaques de Despensa bien cerrados en un lugar fresco y seco. No necesitan refrigeración.',
-    accent: '#C98A2D',
-  },
-  {
-    icon: '🐈',
-    tag: 'Favorito felino',
-    text: 'A los gatos les encanta el olor fuerte de los charales: el snack perfecto por su alto contenido de Omega.',
-    accent: '#C96F8E',
   },
 ];
 ---
 
 <section class="sugarmelon-recommendations" id="tips">
-  <div class="container">
+  <!-- Torn paper divider top -->
+  <div class="torn-paper-top" aria-hidden="true">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+      <path d="M0,60 L0,30 Q150,0 300,30 T600,30 T900,30 T1200,30 L1200,60 Z" fill="var(--cream)"></path>
+    </svg>
+  </div>
+
+  <div class="container relative z-10">
     <header class="recommendations-head">
-      <span class="kicker"><span class="kicker-star">✦</span> Info & Tips</span>
-      <h2 class="section-title t-title">Tips <span class="accent-script">perronas</span></h2>
+      <span class="kicker"><span class="kicker-star">✦</span> La Guía</span>
+      <h2 class="section-title t-title">Secretos <span class="accent-script">Naturales</span></h2>
     </header>
 
-    <div class="tips-grid" data-tips-grid>
-      {tips.map((tip) => (
-        <article class="tip-card" style={`--tip: ${tip.accent};`}>
-          <div class="tip-top">
-            <span class="tip-icon" aria-hidden="true">{tip.icon}</span>
-            <span class="tip-tag">{tip.tag}</span>
-          </div>
-          <p class="tip-text">{tip.text}</p>
-          <span class="tip-paw" aria-hidden="true">🐾</span>
-        </article>
-      ))}
+    <div class="collage-grid" data-tips-grid>
+      {content.map((item, index) => {
+        // Asignamos clases de card basadas en el índice para mantener el diseño del collage
+        const cardClass = `card-${index + 1}`;
+        return (
+          <>
+            <article class={`collage-card rotator-card ${cardClass}`} style={`--tip: ${item.accent};`}>
+              <div class="card-content tip-mode active">
+                <span class="editorial-tag" style={`color: ${item.accent};`}>{item.tag}</span>
+                <h3 class="editorial-title" style={`color: ${item.accent};`}>{item.title}</h3>
+                <p class="editorial-text">{item.text}</p>
+              </div>
+              <div class="card-content review-mode">
+                <div class="review-stars" style={`color: ${item.accent};`}>★★★★★</div>
+                <p class="editorial-text review-text">{item.review}</p>
+                <div class="review-author-wrapper">
+                  <span class="review-author">{item.author}</span>
+                  <span class="google-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" class="google-icon"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Reseña en Google
+                  </span>
+                </div>
+              </div>
+            </article>
+
+            {/* Insertamos los decorativos en los lugares específicos del collage */}
+            {index === 0 && (
+              <div class="collage-asset asset-1">
+                <img src={mascotMegaphone.src} alt="Mascota con megáfono" class="float-anim" />
+                <img src={kibbleHeart.src} alt="" class="kibble kibble-1" aria-hidden="true" />
+              </div>
+            )}
+            {index === 2 && (
+              <div class="collage-asset asset-2">
+                <img src={mascotPlaying.src} alt="Mascota jugando" class="float-anim-alt" />
+                <img src={kibbleFlower.src} alt="" class="kibble kibble-2" aria-hidden="true" />
+                <img src={kibbleHeart.src} alt="" class="kibble kibble-3" aria-hidden="true" />
+              </div>
+            )}
+          </>
+        );
+      })}
     </div>
   </div>
 </section>
@@ -61,14 +95,32 @@ const tips = [
 <style>
   .sugarmelon-recommendations {
     position: relative;
-    padding-block: var(--space-5);
+    padding-block: var(--space-6) var(--space-5);
+    background: var(--surface-muted);
     overflow: hidden;
-    background: linear-gradient(135deg, var(--cream) 0%, #faeee0 55%, #f2e2d0 100%);
+    transition: background-color 0.4s ease;
+  }
+
+  .torn-paper-top {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 4vw;
+    min-height: 40px;
+    z-index: 5;
+    transform: rotate(180deg);
+  }
+
+  .torn-paper-top svg {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
   .recommendations-head {
     text-align: center;
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
   }
 
   .section-title {
@@ -76,141 +128,231 @@ const tips = [
     margin: 0;
   }
 
-  /* ── Grid bento: 4+2 arriba, 2+2+2 abajo ── */
-  .tips-grid {
+  .collage-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1.1rem;
-  }
-
-  .tip-card:nth-child(1) { grid-column: span 4; }
-  .tip-card:nth-child(2) { grid-column: span 2; }
-  .tip-card:nth-child(3) { grid-column: span 2; }
-  .tip-card:nth-child(4) { grid-column: span 2; }
-  .tip-card:nth-child(5) { grid-column: span 2; }
-
-  @media (max-width: 1023px) {
-    .tips-grid { grid-template-columns: repeat(2, 1fr); }
-    .tip-card:nth-child(1) { grid-column: span 2; }
-    .tip-card:nth-child(n + 2) { grid-column: span 1; }
-  }
-
-  @media (max-width: 600px) {
-    .tips-grid { grid-template-columns: 1fr; }
-    .tip-card:nth-child(n) { grid-column: span 1; }
-  }
-
-  /* ── Tarjeta ── */
-  .tip-card {
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(120px, auto);
+    gap: var(--space-3);
     position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .collage-card {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 15px 35px -10px rgba(var(--ink-rgb), 0.08);
+    position: relative;
+    z-index: 2;
+    transition: transform var(--dur-med) var(--ease-bounce);
+    display: grid; /* Importante para encimar contenido */
     overflow: hidden;
+  }
+
+  .collage-card:hover {
+    transform: scale(1.03) rotate(-1deg);
+  }
+
+  /* Contenedores que se rotan */
+  .card-content {
+    grid-area: 1 / 1;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(15px);
+    transition: opacity 0.8s ease, transform 0.8s var(--ease-out);
     display: flex;
     flex-direction: column;
-    gap: 0.9rem;
-    background: var(--white);
-    border: 1px solid rgba(var(--ink-rgb), 0.07);
-    border-radius: var(--radius-lg);
-    padding: 1.35rem 1.5rem;
-    box-shadow: 0 10px 30px -14px rgba(var(--ink-rgb), 0.18);
-    transition:
-      transform var(--dur-fast) var(--ease-bounce),
-      box-shadow var(--dur-fast) var(--ease-out);
+    justify-content: center;
   }
 
-  .tip-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-card);
+  .card-content.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
-  /* La tarjeta destacada lleva un lavado de su color */
-  .tip-card:nth-child(1) {
-    background: linear-gradient(135deg, var(--white) 55%, color-mix(in srgb, var(--tip) 9%, var(--white)) 100%);
+  /* Estilos específicos de reseñas */
+  .review-stars {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
   }
 
-  .tip-top {
+  .review-text {
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .review-author-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
+    gap: 12px;
+    margin-top: 4px;
   }
 
-  .tip-icon {
-    width: 52px;
-    height: 52px;
-    display: grid;
-    place-items: center;
-    font-size: 1.6rem;
-    border-radius: 18px;
-    background: color-mix(in srgb, var(--tip) 12%, var(--white));
-    transition: transform var(--dur-fast) var(--ease-bounce);
-  }
-
-  .tip-card:hover .tip-icon {
-    transform: rotate(-8deg) scale(1.1);
-  }
-
-  .tip-tag {
-    font-size: 0.72rem;
+  .review-author {
+    font-family: var(--font-display);
     font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--brown);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: color-mix(in srgb, var(--tip) 78%, black);
-    background: color-mix(in srgb, var(--tip) 10%, var(--white));
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    white-space: nowrap;
+    letter-spacing: 0.05em;
   }
 
-  .tip-text {
-    color: var(--brown-dark);
-    font-size: 1rem;
-    line-height: 1.6;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  /* La tarjeta destacada lee más grande: jerarquía sin desperdiciar espacio */
-  .tip-card:nth-child(1) .tip-text {
-    font-size: 1.15rem;
+  .google-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
     font-weight: 700;
+    color: var(--brown-soft);
+    background: color-mix(in srgb, var(--brown) 8%, transparent);
+    padding: 3px 8px;
+    border-radius: 99px;
   }
 
-  .tip-paw {
+  .google-icon {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .card-1 {
+    grid-column: 1 / 6;
+    grid-row: 1 / 3;
+    background: linear-gradient(135deg, var(--white) 60%, color-mix(in srgb, var(--tip) 15%, var(--white)) 100%);
+  }
+
+  .asset-1 {
+    grid-column: 6 / 10;
+    grid-row: 1 / 4;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .asset-1 img:not(.kibble) {
+    max-width: 140%;
+    transform: rotate(4deg);
+    filter: drop-shadow(0 20px 30px rgba(var(--ink-rgb), 0.15));
+  }
+
+  .card-2 {
+    grid-column: 9 / 13;
+    grid-row: 2 / 4;
+    background: linear-gradient(135deg, var(--white) 60%, color-mix(in srgb, var(--tip) 15%, var(--white)) 100%);
+  }
+
+  .card-3 {
+    grid-column: 2 / 7;
+    grid-row: 3 / 5;
+    background: linear-gradient(135deg, var(--white) 60%, color-mix(in srgb, var(--tip) 15%, var(--white)) 100%);
+    z-index: 3;
+  }
+
+  .asset-2 {
+    grid-column: 7 / 12;
+    grid-row: 4 / 6;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .asset-2 img:not(.kibble) {
+    max-width: 110%;
+    transform: rotate(-6deg);
+    filter: drop-shadow(0 20px 30px rgba(var(--ink-rgb), 0.15));
+  }
+
+  /* Kibbles animadas */
+  .kibble {
     position: absolute;
-    right: -0.4rem;
-    bottom: -1.1rem;
-    font-size: 4.2rem;
-    line-height: 1;
-    opacity: 0.06;
-    transform: rotate(-18deg);
-    pointer-events: none;
+    width: clamp(30px, 5vw, 60px);
+    height: auto;
+    z-index: 5;
+    filter: drop-shadow(0 10px 15px rgba(var(--ink-rgb), 0.2));
   }
 
-  /* ── Reveal escalonado al hacer scroll (solo si hay JS) ── */
-  .tips-armed .tip-card {
-    opacity: 0;
-    transform: translateY(22px);
-    transition:
-      opacity 0.55s var(--ease-out),
-      transform 0.55s var(--ease-out);
+  .kibble-1 {
+    top: 10%;
+    right: -10%;
+    animation: float-kibble 6s ease-in-out infinite alternate;
   }
-  .tips-armed .tip-card:nth-child(2) { transition-delay: 0.07s; }
-  .tips-armed .tip-card:nth-child(3) { transition-delay: 0.14s; }
-  .tips-armed .tip-card:nth-child(4) { transition-delay: 0.21s; }
-  .tips-armed .tip-card:nth-child(5) { transition-delay: 0.28s; }
-  .tips-armed .tip-card.in-view {
+
+  .kibble-2 {
+    bottom: -10%;
+    left: 0;
+    animation: float-kibble 8s ease-in-out infinite alternate-reverse;
+  }
+
+  .kibble-3 {
+    top: -20%;
+    right: 20%;
+    animation: float-kibble 7s ease-in-out infinite alternate;
+  }
+
+  @keyframes float-kibble {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-30px) rotate(20deg); }
+  }
+
+  .float-anim {
+    animation: float-gentle 8s ease-in-out infinite;
+  }
+  
+  .float-anim-alt {
+    animation: float-gentle 9s ease-in-out infinite reverse;
+  }
+
+  @keyframes float-gentle {
+    0%, 100% { transform: translateY(0) rotate(2deg); }
+    50% { transform: translateY(-15px) rotate(-2deg); }
+  }
+
+  .tips-armed .collage-card {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s var(--ease-bounce), transform 0.6s var(--ease-bounce);
+  }
+  
+  .tips-armed .collage-card.in-view {
     opacity: 1;
     transform: none;
+  }
+
+  @media (max-width: 900px) {
+    .collage-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .collage-card {
+      width: 100%;
+    }
+    .asset-1, .asset-2 {
+      width: 80%;
+      margin: var(--space-2) 0;
+    }
+    .asset-1 img:not(.kibble), .asset-2 img:not(.kibble) {
+      max-width: 100%;
+    }
   }
 </style>
 
 <script>
-  // Reveal escalonado: si no hay JS o no hay soporte, las tarjetas se ven normal
   const grid = document.querySelector('[data-tips-grid]');
 
   if (grid && 'IntersectionObserver' in window) {
     grid.classList.add('tips-armed');
-    const cards = grid.querySelectorAll('.tip-card');
+    const cards = grid.querySelectorAll('.collage-card');
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -221,9 +363,21 @@ const tips = [
           }
         });
       },
-      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
     );
 
     cards.forEach((card) => io.observe(card));
   }
+
+  // Lógica para rotar Tips y Testimonios
+  const rotators = document.querySelectorAll('.rotator-card');
+  rotators.forEach((card, index) => {
+    // Desfasar el inicio de la animación de cada tarjeta para que no cambien todas al mismo tiempo
+    setTimeout(() => {
+      setInterval(() => {
+        const modes = card.querySelectorAll('.card-content');
+        modes.forEach(m => m.classList.toggle('active'));
+      }, 7000); // Cambia cada 7 segundos
+    }, index * 2000); // Desfase de 2 segundos entre tarjetas
+  });
 </script>

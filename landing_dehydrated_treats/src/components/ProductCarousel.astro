@@ -6,7 +6,17 @@ import card3 from '../assets/products/orejas.png';
 import card4 from '../assets/products/mollejas.png';
 import card5 from '../assets/products/patitas.png';
 
+// Import spec images
+import spec1 from '../assets/specs/charales-spec.png';
+import spec2 from '../assets/specs/higados-spec.png';
+import spec3 from '../assets/specs/orejas-spec.png';
+import spec4 from '../assets/specs/mollejas-spec.png';
+import spec5 from '../assets/specs/patitas-spec.png';
+
+import PortionCalculator from './PortionCalculator.astro';
+
 const cardImages = [card1, card2, card3, card4, card5];
+const specImages = [spec1, spec2, spec3, spec4, spec5];
 ---
 
 <section class="sugarmelon-store" id="productos">
@@ -25,7 +35,7 @@ const cardImages = [card1, card2, card3, card4, card5];
 
     <div class="products-row">
       {products.map((p, i) => (
-        <button class="product-card-btn" data-product={JSON.stringify(p)}>
+        <button class="product-card-btn" data-product={JSON.stringify(p)} data-spec={specImages[i].src}>
           <img
             src={cardImages[i].src}
             alt={`Tarjeta de ${p.name}`}
@@ -37,97 +47,72 @@ const cardImages = [card1, card2, card3, card4, card5];
   </div>
 
   <dialog id="nutrition-modal" class="nutrition-modal">
-    <div class="modal-container">
-      <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-      <div class="modal-body" id="modal-body">
-        <!-- Contenido inyectado por JS -->
-      </div>
+    <div class="modal-body" id="modal-body">
+      <!-- Content injected by JS -->
+    </div>
+    <div class="modal-calc-wrapper" id="modal-calc-wrapper" style="display: none;">
+       <PortionCalculator />
     </div>
   </dialog>
 </section>
 
 <script>
   const modal = document.getElementById('nutrition-modal') as HTMLDialogElement;
-  const closeBtn = modal?.querySelector('.modal-close');
   const modalBody = document.getElementById('modal-body');
+  const calcWrapper = document.getElementById('modal-calc-wrapper');
   
   const buttons = document.querySelectorAll('.product-card-btn');
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       const product = JSON.parse((btn as HTMLElement).dataset.product || '{}');
+      const specSrc = (btn as HTMLElement).dataset.spec || '';
+      
       if (modalBody) {
         modalBody.innerHTML = `
-          <div class="modal-header-hero" style="background: linear-gradient(135deg, ${product.accent} 0%, ${product.accentDeep} 100%);">
-            <div class="modal-emoji-wrapper" style="border: 3px solid ${product.accent};">
-              <span class="modal-emoji-dot" style="background: ${product.accentDeep}; width: 28px; height: 28px; border-radius: 50%; display: block;"></span>
-            </div>
-            </div>
-            <h3 class="modal-title" style="color: ${product.textOnAccent || '#fff'};">${product.name}</h3>
-          </div>
-          
-          <div class="modal-scroll-content">
-            <p class="modal-desc">${product.description}</p>
+          <div class="app-modal-wrapper">
+            <button class="modal-close-glass" id="btn-close-modal" aria-label="Cerrar modal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+            </button>
             
-            <div class="modal-section">
-              <h4 class="modal-subtitle" style="color: ${product.accentDeep};">
-                <svg viewBox="0 0 20 20" fill="none" style="width:20px;height:20px;flex-shrink:0;"><rect x="1" y="4" width="18" height="12" rx="2" stroke="${product.accentDeep}" stroke-width="1.5" fill="${product.accent}" opacity="0.3"/><path d="M5 9h4M5 12h6M13 9h2" stroke="${product.accentDeep}" stroke-width="1.3" stroke-linecap="round"/></svg>
-                Análisis Garantizado
-              </h4>
-              <div class="nutrition-grid">
-                ${product.nutrition.map((n: any) => `
-                  <div class="nutrition-card" style="border-bottom: 3px solid ${product.accent}40;">
-                    <span class="n-value" style="color: ${product.accentDeep}">${n.value}</span>
-                    <span class="n-label">${n.label.replace(' (mín.)','').replace(' (máx.)','')}</span>
-                  </div>
-                `).join('')}
-              </div>
+            <div class="app-modal-scroll">
+              <img src="${specSrc}" alt="Especificaciones de ${product.name}" class="spec-img-full" />
             </div>
             
-            <div class="modal-section">
-              <h4 class="modal-subtitle" style="color: ${product.accentDeep};">
-                <svg viewBox="0 0 20 20" fill="none" style="width:20px;height:20px;flex-shrink:0;"><path d="M10 3c-2 0-3 1.5-3 3 0 2 1.5 4 3 6 1.5-2 3-4 3-6 0-1.5-1-3-3-3z" fill="${product.accent}" opacity="0.5"/><path d="M3 10c0 4 3 7 7 7s7-3 7-7" stroke="${product.accentDeep}" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M7 14c1 1 2 1.5 3 1.5s2-.5 3-1.5" stroke="${product.accentDeep}" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg>
-                Ingredientes
-              </h4>
-              <p class="modal-ingredientes" style="background-color: ${product.accent}15; border-left-color: ${product.accentDeep};">
-                ${product.ingredients}
-              </p>
+            <div class="app-modal-dock">
+              <button class="btn-dock btn-dock--calc" id="btn-show-calc">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7 7h10v4H7V7zm0 6h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-8 4h2v2H7v-2zm4 0h6v2h-6v-2z"></path></svg>
+                Calculadora
+              </button>
+              <a href="https://wa.me/525528462102?text=${encodeURIComponent(product.waMessage)}" class="btn-dock btn-dock--order" style="background: ${product.accentDeep};" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                WhatsApp
+              </a>
             </div>
-
-            <div class="modal-section">
-              <h4 class="modal-subtitle" style="color: ${product.accentDeep};">
-                <svg viewBox="0 0 20 20" fill="none" style="width:20px;height:20px;flex-shrink:0;"><circle cx="10" cy="10" r="8" stroke="${product.accentDeep}" stroke-width="1.5" fill="${product.accent}" opacity="0.2"/><path d="M6 10h8M10 6v8" stroke="${product.accentDeep}" stroke-width="1.5" stroke-linecap="round"/></svg>
-                ${product.portionsTitle}
-              </h4>
-              <div class="portions-grid">
-                ${product.portions.map((p: any) => `
-                  <div class="portion-card" style="background-color: ${product.accent}10;">
-                    <div class="portion-icon" style="border: 2px solid ${product.accent};">
-                      <svg viewBox="0 0 24 24" fill="none" style="width:22px;height:22px;"><path d="M12 4C8 4 5 7 5 11c0 2.8 1.5 5.2 4 6.5L10 22h4l1-4.5c2.5-1.3 4-3.7 4-6.5 0-4-3-7-7-7z" fill="${product.accentDeep}" opacity="0.25"/><circle cx="9.5" cy="10.5" r="1.2" fill="${product.accentDeep}"/><circle cx="14.5" cy="10.5" r="1.2" fill="${product.accentDeep}"/></svg>
-                    </div>
-                    <div class="portion-details">
-                      <strong style="color: ${product.accentDeep}">${p.petSize}</strong>
-                      <span>${p.amount}</span>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-actions">
-            <a href="https://wa.me/525528462102?text=${encodeURIComponent(product.waMessage)}" class="btn-premium" style="background: ${product.accentDeep}; color: ${product.textOnAccent || '#fff'}; box-shadow: 0 10px 20px -5px ${product.accentDeep}80;" target="_blank" rel="noopener noreferrer">
-              ¡Quiero Pedir!
-            </a>
           </div>
         `;
+
+        // Asignar el nuevo botón de cierre
+        const btnClose = modalBody.querySelector('#btn-close-modal');
+        if (btnClose) {
+          btnClose.addEventListener('click', () => modal?.close());
+        }
+        
+        // Hide calc on modal open
+        if (calcWrapper) calcWrapper.style.display = 'none';
+
+        const btnCalc = document.getElementById('btn-show-calc');
+        btnCalc?.addEventListener('click', () => {
+          if (calcWrapper) {
+            calcWrapper.style.display = 'block';
+            calcWrapper.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
       }
       modal?.showModal();
     });
   });
 
-  closeBtn?.addEventListener('click', () => {
-    modal?.close();
-  });
+
 
   modal?.addEventListener('click', (e) => {
     if (e.target === modal) {
@@ -140,8 +125,9 @@ const cardImages = [card1, card2, card3, card4, card5];
   .sugarmelon-store {
     padding-block: var(--space-6);
     background-color: var(--cream);
-    background-image: radial-gradient(rgba(50, 16, 28, 0.05) 2px, transparent 0);
+    background-image: radial-gradient(color-mix(in srgb, var(--brown-dark) 5%, transparent) 2px, transparent 0);
     background-size: 30px 30px;
+    transition: background-color 0.4s ease;
   }
 
   .store-header {
@@ -162,43 +148,63 @@ const cardImages = [card1, card2, card3, card4, card5];
     margin: 0 auto;
   }
 
-  /* Grid para que quepan las 5 tarjetas en una fila */
+  /* Grid de productos fluido y auto-adaptable */
   .products-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
     padding-bottom: 1rem;
     width: 100%;
-    margin: 0 auto;
   }
 
-  /* Tarjeta tipo ticket: marco blanco + perforación + cenefa dentada */
+  @media (max-width: 600px) {
+    /* Mejora ergonómica: Carrusel deslizable horizontal en móviles */
+    .products-row {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 1.5rem;
+      margin-inline: -5%; /* Sangría negativa para que llegue al borde de la pantalla */
+      padding-inline: 5%; /* Espaciado inicial */
+      gap: 1rem;
+    }
+
+    .products-row::-webkit-scrollbar {
+      display: none; /* Ocultar barra de scroll para un look más limpio */
+    }
+
+    .product-card-btn {
+      flex: 0 0 70vw; /* Cada tarjeta ocupa el 70% del ancho de la pantalla */
+      scroll-snap-align: center; /* Se ajusta al centro automáticamente */
+    }
+  }
+
+  /* Tarjeta tipo ticket */
   .product-card-btn {
     position: relative;
-    flex: 1 1 0;
-    min-width: 0;
+    width: 100%;
     background: var(--white);
     border: none;
     padding: 9px 9px 22px;
     cursor: pointer;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease, background-color 0.4s ease;
     border-radius: 14px 14px 5px 5px;
-    filter: drop-shadow(0 12px 22px rgba(50, 16, 28, 0.12));
+    filter: drop-shadow(0 12px 22px rgba(var(--ink-rgb), 0.12));
   }
 
-  /* Línea de perforación del talón desprendible */
   .product-card-btn::before {
     content: '';
     position: absolute;
     left: 10px;
     right: 10px;
     bottom: 13px;
-    border-top: 2px dashed rgba(50, 16, 28, 0.18);
+    border-top: 2px dashed color-mix(in srgb, var(--brown-dark) 18%, transparent);
   }
 
-  /* Cenefa dentada inferior (mismo patrón que el ticket de la calculadora) */
   .product-card-btn::after {
     content: '';
     position: absolute;
@@ -221,46 +227,20 @@ const cardImages = [card1, card2, card3, card4, card5];
     border-radius: 8px;
   }
 
-  @media (max-width: 1024px) {
-    .products-row {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .product-card-btn {
-      flex: 0 1 calc(33.333% - 1rem);
-      min-width: 200px;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .product-card-btn {
-      flex: 0 1 calc(50% - 1rem);
-      min-width: 160px;
-    }
-  }
 
-  @media (max-width: 480px) {
-    .product-card-btn {
-      flex: 0 1 100%;
-      max-width: 300px;
-    }
-  }
 
   /* PREMIUM MODAL STYLES */
   .nutrition-modal {
     border: none;
-    border-radius: 24px;
-    box-shadow: 0 40px 100px rgba(50, 16, 28, 0.25);
+    border-radius: var(--radius-xl);
     padding: 0;
-    max-width: 550px;
+    max-width: 440px; 
     width: 92%;
-    background: var(--white, #ffffff);
-    color: var(--brown-dark, #4A2B29);
-    overflow: hidden; /* Para el header de color */
-    margin: auto; /* Truco de HTML5 <dialog> para centrado absoluto */
+    background: transparent;
+    overflow: visible; 
+    margin: auto; 
   }
 
-  /* Animación suave de entrada al abrir modal */
   .nutrition-modal[open] {
     animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   }
@@ -270,8 +250,8 @@ const cardImages = [card1, card2, card3, card4, card5];
   }
 
   .nutrition-modal::backdrop {
-    background: rgba(26, 12, 16, 0.65);
-    backdrop-filter: blur(8px);
+    background: rgba(15, 8, 10, 0.75);
+    backdrop-filter: blur(10px);
     animation: fadeBackdrop 0.4s ease forwards;
   }
   @keyframes fadeBackdrop {
@@ -279,211 +259,137 @@ const cardImages = [card1, card2, card3, card4, card5];
     to { opacity: 1; }
   }
 
-  .modal-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    max-height: 90vh; /* Para que el modal no sea más alto que la pantalla */
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 1.2rem;
-    right: 1.2rem;
-    background: rgba(255, 255, 255, 0.3);
-    border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    font-size: 1.5rem;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    transition: background 0.2s ease, transform 0.2s ease;
-    z-index: 10;
-    backdrop-filter: blur(4px);
-  }
-  .modal-close:hover {
-    background: rgba(255, 255, 255, 0.5);
-    transform: scale(1.1) rotate(90deg);
-  }
-
   .modal-body {
     display: flex;
     flex-direction: column;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
   }
 
-  .modal-header-hero {
-    padding: 2.5rem 2rem 1.5rem;
-    text-align: center;
+  /* ── App Modal UI ── */
+  .app-modal-wrapper {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    background: var(--cream);
   }
 
-  .modal-emoji-wrapper {
-    background: white;
-    width: 70px;
-    height: 70px;
+  .modal-close-glass {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    margin: 0 auto 1rem;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  }
-
-  .modal-title {
-    margin: 0;
-    font-size: 2.2rem;
-    font-family: var(--font-display, inherit);
-    line-height: 1.1;
-  }
-
-  .modal-scroll-content {
-    padding: 1.5rem 2rem;
-    overflow-y: auto;
-    flex: 1;
-  }
-
-  .modal-desc {
-    margin-bottom: 2rem;
-    color: var(--brown-soft, #7A5B59);
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.5;
-    text-align: center;
-  }
-
-  .modal-section {
-    margin-bottom: 2rem;
-  }
-
-  .modal-subtitle {
-    margin: 0 0 1rem 0;
-    font-size: 1.15rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-body, inherit);
-    font-weight: 800;
-  }
-
-  .subtitle-icon {
-    font-size: 1.3rem;
-  }
-
-  /* Grid de Nutrición */
-  .nutrition-grid {
+    background: rgba(20, 10, 13, 0.3);
+    backdrop-filter: blur(8px);
+    color: #fff;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 0.8rem;
+    place-items: center;
+    z-index: 20;
+    transition: transform var(--dur-fast), background var(--dur-fast);
+  }
+
+  .modal-close-glass:hover {
+    background: rgba(20, 10, 13, 0.5);
+    transform: scale(1.1);
+  }
+
+  .modal-close-glass svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .app-modal-scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    padding-bottom: 90px; /* Espacio para el dock */
   }
   
-  .nutrition-card {
-    background: #fdfbf8;
-    border-radius: 12px;
-    padding: 1rem 0.5rem;
-    text-align: center;
+  .spec-img-full {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .app-modal-dock {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.2rem 1.5rem;
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .n-value {
-    font-size: 1.35rem;
-    font-weight: 900;
-  }
-
-  .n-label {
-    font-size: 0.75rem;
-    color: var(--brown-soft);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  /* Ingredientes */
-  .modal-ingredientes {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    padding: 1rem 1.25rem;
-    border-radius: 12px;
-    border-left: 4px solid;
-    margin: 0;
-    font-weight: 500;
-  }
-
-  /* Grid de Porciones */
-  .portions-grid {
-    display: flex;
-    flex-direction: column;
     gap: 0.75rem;
+    background: linear-gradient(to top, var(--cream) 60%, transparent);
+    backdrop-filter: blur(4px);
+    z-index: 10;
   }
 
-  .portion-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    border-radius: 12px;
-  }
-
-  .portion-icon {
-    font-size: 1.8rem;
-    background: white;
-    width: 48px;
-    height: 48px;
+  .btn-dock {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    flex-shrink: 0;
-  }
-
-  .portion-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .portion-details strong {
-    font-size: 1rem;
-    font-weight: 800;
-  }
-
-  .portion-details span {
+    gap: 0.4rem;
+    flex: 1;
+    padding: 0.9rem 0.5rem;
+    border-radius: 14px;
     font-size: 0.95rem;
-    color: var(--brown-soft);
-    font-weight: 500;
-  }
-
-  /* CTA Button */
-  .modal-actions {
-    padding: 1rem 2rem 2rem;
-    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, white 20%);
-    text-align: center;
-    position: sticky;
-    bottom: 0;
-  }
-
-  .btn-premium {
-    display: inline-block;
-    width: 100%;
-    padding: 1.1rem 2rem;
-    border-radius: 999px;
     font-weight: 800;
-    font-size: 1.15rem;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 20px rgba(var(--ink-rgb), 0.15);
+    transition: transform var(--dur-fast) var(--ease-bounce), box-shadow var(--dur-fast);
   }
 
-  .btn-premium:hover {
+  .btn-dock:hover {
     transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(var(--ink-rgb), 0.2);
   }
+
+  .btn-dock svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn-dock--calc {
+    background: var(--white);
+    color: var(--brown-dark);
+    flex: 0.8;
+  }
+
+  .btn-dock--order {
+    color: #fff;
+    flex: 1.2;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Shimmer effect for primary button */
+  .btn-dock--order::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+    transform: skewX(-20deg);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+  }
+
+  .modal-calc-wrapper {
+    background: #fff;
+    padding: 0 1rem 1rem;
+    border-top: 1px solid #eee;
+  }
+
 </style>

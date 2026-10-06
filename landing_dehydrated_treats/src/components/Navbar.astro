@@ -13,9 +13,11 @@ import logoMain from '../assets/logos/logo-main.png';
       <a href="#productos">Productos</a>
       <a href="#contacto">Contacto</a>
     </div>
-    <a href={waLink('¡Hola! Me interesan los premios deshidratados 🐾')} class="btn btn--primary" target="_blank" rel="noopener noreferrer">
-      Pedir ahora
-    </a>
+    <div class="navbar__actions">
+      <a href={waLink('¡Hola! Me interesan los premios deshidratados')} class="btn btn--primary" target="_blank" rel="noopener noreferrer">
+        Pedir ahora
+      </a>
+    </div>
   </div>
 </nav>
 
@@ -26,3 +28,18 @@ import logoMain from '../assets/logos/logo-main.png';
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 </script>
+
+<style>
+  .navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  @media (max-width: 860px) {
+    .navbar__actions .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+  }
+</style>
