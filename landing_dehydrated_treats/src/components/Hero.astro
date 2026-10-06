@@ -1,8 +1,13 @@
 ---
 import kibbleHeart from '../assets/kibble/kibble-heart.png';
 import kibbleFlower from '../assets/kibble/kibble-flower.png';
-import heroTreat1 from '../assets/products/charales.png';
-import heroTreat2 from '../assets/products/higados.png';
+import treat1 from '../assets/products/charales.png';
+import treat2 from '../assets/products/higados.png';
+import treat3 from '../assets/products/orejas.png';
+import treat4 from '../assets/products/mollejas.png';
+import treat5 from '../assets/products/patitas.png';
+
+const carouselImages = [treat1, treat2, treat3, treat4, treat5];
 ---
 
 <section class="hero-sugarmelon" id="inicio">
@@ -52,22 +57,17 @@ import heroTreat2 from '../assets/products/higados.png';
     <div class="hero-3d-stage" data-tilt-stage>
       <div class="tilt-scene" data-tilt-scene>
         <div class="tilt-shadow" aria-hidden="true"></div>
-        <!-- Composición de productos premium -->
-        <div class="hero-treats-composition">
-          <img
-            src={heroTreat2.src}
-            alt="Hígados deshidratados premium"
-            class="hero-treat hero-treat--back"
-            loading="eager"
-            fetchpriority="high"
-          />
-          <img
-            src={heroTreat1.src}
-            alt="Charales deshidratados premium"
-            class="hero-treat hero-treat--front"
-            loading="eager"
-            fetchpriority="high"
-          />
+        <!-- Carrusel Automático de Productos -->
+        <div class="hero-carousel" id="hero-carousel">
+          {carouselImages.map((img, i) => (
+            <img
+              src={img.src}
+              alt="Premio Guaw & Miaw"
+              class={`hero-carousel-item ${i === 0 ? 'active' : ''}`}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+            />
+          ))}
         </div>
       </div>
       <div class="tilt-gloss" aria-hidden="true"></div>
@@ -79,6 +79,20 @@ import heroTreat2 from '../assets/products/higados.png';
 </section>
 
 
+
+<script>
+  // Carrusel Automático
+  const items = document.querySelectorAll('.hero-carousel-item');
+  let currentIndex = 0;
+
+  if (items.length > 0) {
+    setInterval(() => {
+      items[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % items.length;
+      items[currentIndex].classList.add('active');
+    }, 3500); // Cambia cada 3.5 segundos
+  }
+</script>
 
 <style>
   /* Scoped CSS para el Hero estilo Sugarmelon */
@@ -204,7 +218,7 @@ import heroTreat2 from '../assets/products/higados.png';
     50% { transform: translateY(-15px); }
   }
 
-  .hero-treats-composition {
+  .hero-carousel {
     position: relative;
     width: 100%;
     aspect-ratio: 1;
@@ -213,42 +227,21 @@ import heroTreat2 from '../assets/products/higados.png';
     justify-content: center;
   }
 
-  .hero-treat {
+  .hero-carousel-item {
     position: absolute;
-    width: 75%;
+    width: 85%;
     height: auto;
     filter: drop-shadow(0 26px 30px rgba(var(--ink-rgb), 0.25));
-    transition: transform var(--dur-med) var(--ease-out);
-  }
-
-  /* Treat de atrás (Hígados) */
-  .hero-treat--back {
-    width: 65%;
-    top: 5%;
-    right: 0%;
-    transform: rotate(15deg);
-    filter: drop-shadow(0 15px 20px rgba(var(--ink-rgb), 0.15)) brightness(0.9);
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
     z-index: 1;
-    animation: float-back 8s ease-in-out infinite;
   }
 
-  /* Treat de adelante (Charales) */
-  .hero-treat--front {
-    bottom: 5%;
-    left: -5%;
-    transform: rotate(-10deg);
+  .hero-carousel-item.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
     z-index: 2;
-    animation: float-front 6s ease-in-out infinite;
-  }
-
-  @keyframes float-front {
-    0%, 100% { transform: translateY(0) rotate(-10deg); }
-    50% { transform: translateY(-12px) rotate(-8deg); }
-  }
-
-  @keyframes float-back {
-    0%, 100% { transform: translateY(0) rotate(15deg); }
-    50% { transform: translateY(12px) rotate(18deg); }
   }
 
   /* Sombra debajo de la mascota */
