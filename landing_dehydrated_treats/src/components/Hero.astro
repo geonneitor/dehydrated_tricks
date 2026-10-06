@@ -1,7 +1,8 @@
 ---
 import kibbleHeart from '../assets/kibble/kibble-heart.png';
 import kibbleFlower from '../assets/kibble/kibble-flower.png';
-import logoMain from '../assets/logos/logo-main.png';
+import heroTreat1 from '../assets/products/charales.png';
+import heroTreat2 from '../assets/products/higados.png';
 ---
 
 <section class="hero-sugarmelon" id="inicio">
@@ -51,16 +52,23 @@ import logoMain from '../assets/logos/logo-main.png';
     <div class="hero-3d-stage" data-tilt-stage>
       <div class="tilt-scene" data-tilt-scene>
         <div class="tilt-shadow" aria-hidden="true"></div>
-        <img
-          src={logoMain.src}
-          alt="Logotipo de Guaw & Miaw"
-          class="animated-logo"
-          width="300"
-          height="300"
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-        />
+        <!-- Composición de productos premium -->
+        <div class="hero-treats-composition">
+          <img
+            src={heroTreat2.src}
+            alt="Hígados deshidratados premium"
+            class="hero-treat hero-treat--back"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <img
+            src={heroTreat1.src}
+            alt="Charales deshidratados premium"
+            class="hero-treat hero-treat--front"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
       </div>
       <div class="tilt-gloss" aria-hidden="true"></div>
       <!-- Decorative floating kibbles at different depths -->
@@ -196,24 +204,51 @@ import logoMain from '../assets/logos/logo-main.png';
     50% { transform: translateY(-15px); }
   }
 
-  .animated-logo {
-    display: block;
-    width: 85%;
-    max-width: 320px;
-    height: auto;
-    margin: 0 auto;
-    filter: drop-shadow(0 26px 30px rgba(var(--ink-rgb), 0.15));
-    animation: happy-hop 4s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
-    transform-origin: bottom center;
+  .hero-treats-composition {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Animación juguetona de saltito alegre */
-  @keyframes happy-hop {
-    0%, 100% { transform: scale(1) translateY(0) rotate(0); }
-    10% { transform: scale(1.05, 0.95) translateY(5px) rotate(0); }
-    30% { transform: scale(0.95, 1.05) translateY(-25px) rotate(-3deg); }
-    40% { transform: scale(1.02, 0.98) translateY(0) rotate(2deg); }
-    50% { transform: scale(1) translateY(0) rotate(0); }
+  .hero-treat {
+    position: absolute;
+    width: 75%;
+    height: auto;
+    filter: drop-shadow(0 26px 30px rgba(var(--ink-rgb), 0.25));
+    transition: transform var(--dur-med) var(--ease-out);
+  }
+
+  /* Treat de atrás (Hígados) */
+  .hero-treat--back {
+    width: 65%;
+    top: 5%;
+    right: 0%;
+    transform: rotate(15deg);
+    filter: drop-shadow(0 15px 20px rgba(var(--ink-rgb), 0.15)) brightness(0.9);
+    z-index: 1;
+    animation: float-back 8s ease-in-out infinite;
+  }
+
+  /* Treat de adelante (Charales) */
+  .hero-treat--front {
+    bottom: 5%;
+    left: -5%;
+    transform: rotate(-10deg);
+    z-index: 2;
+    animation: float-front 6s ease-in-out infinite;
+  }
+
+  @keyframes float-front {
+    0%, 100% { transform: translateY(0) rotate(-10deg); }
+    50% { transform: translateY(-12px) rotate(-8deg); }
+  }
+
+  @keyframes float-back {
+    0%, 100% { transform: translateY(0) rotate(15deg); }
+    50% { transform: translateY(12px) rotate(18deg); }
   }
 
   /* Sombra debajo de la mascota */
